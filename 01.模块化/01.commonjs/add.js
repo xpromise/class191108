@@ -8,4 +8,5 @@ function add(x, y) {
 }
 
 // 暴露出去
-exports.add = add;
+exports.add = add; // { add: [Function: add] }
+// exports = add; // {}

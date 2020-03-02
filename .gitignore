@@ -1,0 +1,8 @@
+# git的忽略文件
+
+# 忽略文件夹
+node_modules/
+.idea/
+
+# 忽略文件
+package-lock.json
