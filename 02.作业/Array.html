@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      /*
+      Array.prototype.map(() => {})
+      Array.prototype.filter(() => {})
+      Array.prototype.reduce(() => {}, 0)
+    */
+
+      const arr = [6, 7, 8, 9, 10];
+
+      // 生成的新数组和原数组相比：长度不变，值变
+      /* const result = arr.map((item, index, array) => {
+        // item 遍历的当前值
+        // index 遍历的下标
+        // array 整个数组
+        console.log(item, index, array);
+        // return 1;
+        return item + 10;
+      }); */
+
+      // 生成的新数组和原数组相比：值不变，长度变
+      /* const result = arr.filter((item, index, array) => {
+        // 返回值为true就保留，返回值为false就删除/过滤
+        console.log(item, index, array);
+        if (item < 8) {
+          return false;
+        }
+        return true;
+      }); */
+
+      // 生成的新数组和原数组相比：值变，长度变
+      /*
+        如果将来希望返回值是number，第二个参数一般初始化为 0
+        如果将来希望返回值是string，第二个参数一般初始化为 ''
+        如果将来希望返回值是object，第二个参数一般初始化为 {}
+        如果将来希望返回值是array，第二个参数一般初始化为 []
+      */
+      const result = arr.reduce((previous, current, index, array) => {
+        /*
+          previous 上一次遍历的返回值，默认为reduce方法的第二个参数 0
+          current 相当于item，当前遍历元素的值
+          index 当前遍历元素的下标
+          array 整个数组
+        */
+        console.log(previous, current, index, array);
+        return previous + current;
+      }, 0);
+
+      console.log(result);
+    </script>
+  </body>
+</html>
