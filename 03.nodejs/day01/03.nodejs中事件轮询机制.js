@@ -25,12 +25,13 @@
       看nodejs的事件轮询机制
 
     js引擎执行异步代码。会优先执行微任务，再执行宏任务
+      执行微任务时，添加的微任务放入下一个微任务队列
 */
 
+// 1 4 8 5 2 6 3 9
 process.nextTick(() => {console.log(111);});
 
 setTimeout(() => {console.log(222);}, 0);
-
 setImmediate(() => {console.log(333);});
 
 const promise = Promise.resolve();
@@ -41,16 +42,12 @@ promise
     process.nextTick(() => {console.log(555);});
     setTimeout(() => {console.log(666);}, 0);
   })
-  .catch(() => {
-    console.log(777);
-  })
+  .catch(() => {console.log(777);})
   .then(() => {
     console.log(888);
     setImmediate(() => {console.log(999);});
   })
-  .catch(() => {
-    console.log(101010);
-  })
+  .catch(() => {console.log(101010);})
 
 
 // 2 1 4 5 3 6
