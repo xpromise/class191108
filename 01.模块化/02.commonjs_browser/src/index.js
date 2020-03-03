@@ -13,7 +13,6 @@
 
       2. 运行browserify，将commonjs语法编译成浏览器能识别的语法
         npx browserify commonjs的文件 -o 浏览器能识别的文件
-
 */
 
 const add = require("./add");
