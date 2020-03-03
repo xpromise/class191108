@@ -43,6 +43,8 @@
 import add from "./add";
 // 引入分别暴露的模块(必须对象解构赋值)
 import { name, age } from "./person";
+// 如果不用对象解构赋值，获取的是undefined
+// import person from "./person";
 // 引入统一暴露的模块(必须对象解构赋值)
 import { mul, count } from "./math";
 

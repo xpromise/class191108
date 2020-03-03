@@ -2,9 +2,9 @@
 
 var _add = _interopRequireDefault(require("./add"));
 
-var _person = require("./person");
+var _person = _interopRequireDefault(require("./person"));
 
-var _math = require("./math");
+var _math = _interopRequireDefault(require("./math"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -25,6 +25,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
     - babel
       一个编译js的工具：将ES6以上的js语法编译成ES5一下的js语法，从而能让js代码在低版本浏览器运行
 
+      实际上：将ES6模块化编译成commonjs模块化
+
       1. 下载安装
         npm init -y
         npm i @babel/core @babel/cli @babel/preset-env -D
@@ -37,6 +39,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
         npx babel src -d build  (将src目录下所有文件编译到build下面去)
           注意：browserify工具只接受一个入口js文件 index.js（因为会自动分析依赖关系从而加载其他模块）
                 但是，babel不行，所以需要babel处理哪些文件，就传哪些文件
+    
+    - browserify
+      将commonjs模块化编译成浏览器能识别的模块化
+      
+      npx browserify build/index.js -o build/built.js
 
 */
 // 引入其他模块
@@ -44,6 +51,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 // 引入分别暴露的模块(必须对象解构赋值)
 // 引入统一暴露的模块(必须对象解构赋值)
 console.log((0, _add["default"])(2, 1));
-console.log(_person.name, _person.age);
-console.log((0, _math.mul)(2, 2));
-console.log((0, _math.count)(2, 2));
+console.log(_person["default"]);
+console.log(_math["default"]); // console.log(name, age);
+// console.log(mul(2, 2));
+// console.log(count(2, 2));
