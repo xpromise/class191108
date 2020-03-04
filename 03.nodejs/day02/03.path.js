@@ -2,6 +2,7 @@
   path 路径
     专门用来出来路径问题
     path.relative(from, to) 用来处理相对路径
+      处理from到to的相对路径
     path.resolve([...paths]) 用来处理绝对路径
   
   Buffer和process是global全局变量，所以可以直接使用
