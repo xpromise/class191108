@@ -70,8 +70,6 @@ class Events {
 
     if (callbacks) {
       // 如果存在，才需要触发回调函数
-
-      // 异步调用
       setTimeout(() => {
         this._events[eventName].forEach(callback => {
           // 同步调用
