@@ -1,0 +1,11 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title 静态资源服务器
+  body
+    ul
+      each item in files
+        li 
+          a(href= (url === '/' ? '' : url) + '/' + item) #{item}
