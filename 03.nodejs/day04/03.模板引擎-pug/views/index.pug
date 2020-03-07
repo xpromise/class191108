@@ -1,0 +1,14 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title pug的使用
+  body
+    div#box.box hello div
+    ul  
+      li
+        a(href='http://www.atguigu.com') 尚硅谷
+        
+    each item, index in persons
+      p #{item.name}-#{item.age}-#{index}
