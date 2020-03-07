@@ -8,6 +8,7 @@ const util = require("util");
 const pug = require("pug");
 
 const { root } = require("../config");
+const getMimeType = require("../utils/mime");
 
 const stat = util.promisify(fs.stat);
 const readdir = util.promisify(fs.readdir);
@@ -47,9 +48,12 @@ module.exports = async (req, res) => {
       // 读取文件里面的内容
       const data = await readFile(filePath);
 
+      // 获取文件mimeType
+      const mimeType = getMimeType(filePath);
+
       // 返回响应
       res.statusCode = 200;
-      res.setHeader("Content-Type", "application/javascript;charset=utf8");
+      res.setHeader("Content-Type", `${mimeType};charset=utf8`);
       res.end(data);
       return;
     }
