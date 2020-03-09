@@ -1,0 +1,23 @@
+# 表明是最顶层的配置文件，发现设为true时，就不会一层层查找.editorconfig文件
+root = true
+# *代表所有文件
+[*]
+# indent_style 缩进风格
+indent_style = tab
+# indent_style 缩进宽度/大小
+indent_size = 2
+charset = utf-8
+# 设为true表示会除去换行行首的任意空白字符
+trim_trailing_whitespace = true
+# 设为true表明使文件以一个空白行结尾
+insert_final_newline = true
+# 每行最长为80字节
+max_line_length = 80
+
+# 匹配package.json文件
+[package.json]
+indent_style = space
+indent_size = 2
+[*.md]
+# 设为true表示不会除去换行行首的任意空白字符
+trim_trailing_whitespace = false
