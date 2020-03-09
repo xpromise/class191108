@@ -1,0 +1,4 @@
+# eslint 忽略文件
+node_modules
+test
+
