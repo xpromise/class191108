@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ajax</title>
+  </head>
+  <body>
+    <button id="btn">点击按钮发送ajax请求</button>
+    <script>
+      /*
+      ajax: async js and xml 异步的js和xml
+
+      html: 超文本标记语言（预定义标签）：搭建页面结构
+      xml：可扩展的标记语法（自定义标签）：传输/存储数据的格式
+      json：传输/存储数据的格式
+
+      用js对象表示
+      const person = { name: 'jack', age: 18, sex: '男' }
+
+      用xml表示（过去传输数据） 更大，解析更复杂等
+        <person>
+          <name>jack</name>
+          <age>18</age>
+          <sex>男</sex>  
+        </person>
+
+      用json表示（现在传输数据）
+      const person = '{ "name": "jack", "age": 18, "sex": "男" }'
+      
+      作用：用来客户端向服务器发送异步请求的技术 - ajax
+      使用：
+        1. 创建xhr对象
+        2. 绑定事件监听
+        3. 设置请求信息
+        4. 发送请求
+    */
+
+      document.getElementById("btn").onclick = function() {
+        // 发送ajax请求
+        // 1. 创建xhr对象
+        const xhr = new XMLHttpRequest();
+        // 2. 绑定事件监听
+        xhr.onreadystatechange = function() {
+          /*
+            监听 readystate 值的变化（一共变化4次）
+            readState的值：
+              0：初始化状态，xhr刚刚创建
+              1：还没有发送请求（没有调用send方法），调用open方法了
+              2：已经发送请求了（调用send方法），并且接受到了部分响应结果（响应首行和响应头）
+              3：已经接受到了部分响应体内容（如果数据较小，就全部接受了）
+              4：全部接受完了数据
+          */
+          /* if (xhr.readyState === 1) {
+            // 刚调用open方法，还可以设置请求头
+            xhr.setRequestHeader("content-type", "text/plain");
+          }
+
+          if (xhr.readyState === 2) {
+            // 响应首行和响应头
+            console.log(xhr.status); // 响应状态码
+            console.log(xhr.getResponseHeader("content-type")); // 获取响应头
+            console.log(xhr.responseText); // 没有
+          }
+
+          if (xhr.readyState === 3) {
+            // 接受到了数据
+            console.log(xhr.responseText);
+          }
+
+          if (xhr.readyState === 4) {
+            // 全部接受到了数据
+            console.log(xhr.responseText);
+          } */
+          // 当 readyState 等于4说明响应全部接受完了，但是响应是成功还是失败，不一定
+          if (xhr.readyState === 4) {
+            // 通过响应状态码判断响应是否成功
+            // 只要响应状态码以2xx开头就是响应成功，否则就是失败~
+            if (xhr.status >= 200 && xhr.status <= 299) {
+              // 请求成功
+              console.log("请求成功", xhr.responseText);
+              return;
+            }
+
+            console.log("请求失败~");
+          }
+        };
+        // 3. 设置请求信息（请求地址、请求方式、请求参数、请求头等）
+        // xhr.open(请求方式，请求地址?get请求参数（查询字符串参数）)
+        xhr.open("GET", "http://localhost:3000?name=admin&age=18");
+        // 设置请求头
+        // xhr.setRequestHeader("Content-type", "text/plain");
+
+        // 4. 发送请求
+        xhr.send();
+      };
+    </script>
+  </body>
+</html>
