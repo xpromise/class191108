@@ -87,7 +87,16 @@
         };
         // 3. 设置请求信息（请求地址、请求方式、请求参数、请求头等）
         // xhr.open(请求方式，请求地址?get请求参数（查询字符串参数）)
-        xhr.open("GET", "http://localhost:3000?name=admin&age=18");
+        /*
+          IE浏览器默认会缓存GET的请求的结果，第二次以后的请求会读取缓存
+            优点：响应速度快
+            导致问题（缺点）：不能获取服务器更新的实时数据
+            如何解决？在请求参数加上随机数/时间戳
+        */
+        xhr.open(
+          "GET",
+          "http://localhost:3000?name=admin&age=18&date=" + Date.now()
+        );
         // 设置请求头
         // xhr.setRequestHeader("Content-type", "text/plain");
 

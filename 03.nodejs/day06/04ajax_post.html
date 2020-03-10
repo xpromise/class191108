@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ajax_post</title>
+  </head>
+  <body>
+    <button id="btn">点击按钮发送ajax请求</button>
+    <script>
+      document.getElementById("btn").onclick = function() {
+        // 发送ajax请求
+        const xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if (xhr.status >= 200 && xhr.status <= 299) {
+              console.log("请求成功", xhr.responseText);
+              return;
+            }
+            console.log("请求失败~");
+          }
+        };
+
+        xhr.open("POST", "http://localhost:3000");
+        // 设置请求头
+        // xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        const person = { name: "jack", age: 18 };
+
+        // xhr.send(body)  body请求体数据（post请求的请求参数） 必须是字符串
+        // json数据
+        // xhr.send(JSON.stringify(person));
+        // 采用urlencoded编码的数据（form表单提交的数据格式）
+        xhr.send('name=jack&age=18');
+      };
+    </script>
+  </body>
+</html>

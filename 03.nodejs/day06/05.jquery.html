@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>jquery</title>
+  </head>
+  <body>
+    <button id="btn">jquery发送ajax</button>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+      $("#btn").click(function() {
+        /* $.ajax({
+          url: "http://localhost:3000",
+          // data: {
+          //   name: "jack",
+          //   age: 18
+          // },
+          data: JSON.stringify({
+            name: "jack",
+            age: 18
+          }),
+          // method: "GET",
+          method: "POST",
+          headers: {
+            // "Content-Type": "application/x-www-form-urlencoded"
+            "Content-Type": "application/json"
+          },
+          success(data) {
+            // 请求成功的回调函数
+            console.log("接受到响应: ", data);
+          },
+          error(err) {
+            // 请求失败的回调函数
+            console.log(err);
+          }
+        }); */
+
+        /* $.get("http://localhost:3000", { name: "jack", age: 18 }, function(
+          data
+        ) {
+          console.log(data);
+        }); */
+
+        $.post("http://localhost:3000", { name: "jack", age: 18 }, function(
+          data
+        ) {
+          console.log(data);
+        });
+        
+      });
+    </script>
+  </body>
+</html>
