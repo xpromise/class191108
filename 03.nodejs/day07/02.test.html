@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>test</title>
+  </head>
+  <body>
+    <button id="btn">发送ajax请求</button>
+    <script>
+      document.getElementById("btn").onclick = function() {
+        // 使用jsonp解决跨域
+        // 1. 创建script标签
+        const script = document.createElement("script");
+        // 2. 设置请求成功的回调函数(必须是全局函数)
+        window.success = function(data) {
+          console.log("请求成功了，", data);
+        };
+        // 3. 设置script的src属性（定义请求地址）
+        // callback=全局函数名称
+        script.src = `http://localhost:3000?callback=success`;
+        // 4. 添加页面中生效（发送请求）
+        document.body.appendChild(script);
+      };
+    </script>
+  </body>
+</html>
