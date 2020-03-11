@@ -26,9 +26,9 @@
             console.log("成功111", value); // 返回成功状态
             // throw 'error'; // 返回失败状态
             return new MyPromise((resolve, reject) => {
-              // resolve(); // 返回成功状态
+              // resolve(123456); // 返回成功状态
               reject(); // 返回失败状态
-            })
+            });
           },
           reason => {
             console.log("失败222", reason);

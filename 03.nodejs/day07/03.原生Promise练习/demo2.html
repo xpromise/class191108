@@ -16,14 +16,14 @@
         .then(
           () => {
             console.log(222);
-            return resolve();
+            return 123;
           },
           () => {
             console.log(333);
           }
         )
         .then(
-          () => {
+          (value) => {
             console.log(444);
           },
           () => {

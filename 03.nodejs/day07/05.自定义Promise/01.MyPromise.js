@@ -30,7 +30,10 @@
         // _self._callbacks.onResolved();
         // 异步调用
         setTimeout(function() {
-          _self._callbacks.onResolved(value);
+          const onResolved = _self._callbacks.onResolved;
+          // 如果成功回调存在则调用，不存在就不调用了
+          // 因为最后一个没有成功回调
+          onResolved && onResolved(value);
         }, 0);
       }
     }
@@ -43,7 +46,8 @@
         _self._result = reason;
         // 异步调用
         setTimeout(function() {
-          _self._callbacks.onRejected(reason);
+          const onRejected = _self._callbacks.onRejected;
+          onRejected && onRejected(reason);
         }, 0);
       }
     }
@@ -54,28 +58,51 @@
 
   MyPromise.prototype.then = function(onResolved, onRejected) {
     const _self = this;
-    
+
     // 返回一个新Promise对象
-    return new MyPromise(function (resolve, reject) {
-      // 新Promise对象的状态看什么  onResolved 或 onResolved 的执行结果
-      _self._callbacks.onResolved = function (value) {
-        // 得到内部函数的结果值
-        const result = onResolved(value);
-        // 判断result是否是Promise对象
-        if (result instanceof MyPromise) {
-          // 是promise
-          // 怎么知道result内部的状态？
-          result.then(function(value) {
+    return new MyPromise(function(resolve, reject) {
+      /*
+        then方法返回promise对象状态：看 onResolved 或 onRejected 的执行结果
+          但 onResolved 或 onRejected 只能在 resolve 或 reject 被调用（不能在这里调用）
+      */
+      _self._callbacks.onResolved = function(value) {
+        try {
+          // 得到内部函数的结果值
+          const result = onResolved(value);
+          // 判断result是否是Promise对象
+          if (result instanceof MyPromise) {
+            // 是promise
+            // 怎么知道result内部的状态？
+            /* result.then(function(value) {
             resolve(value);
           }, function (reason) {
             reject(reason);
-          })
-        } else {
-          // 不是promise
+          }) */
+            result.then(resolve, reject);
+          } else {
+            // 不是promise, 默认就是成功状态
+            // result就是新promise内部结果值
+            resolve(result);
+          }
+        } catch (e) {
+          // 一旦报错，就返回失败状态
+          reject(e);
         }
       };
-      _self._callbacks.onRejected = onRejected;
-    })
+
+      _self._callbacks.onRejected = function(reason) {
+        try {
+          const result = onRejected(reason);
+          if (result instanceof MyPromise) {
+            result.then(resolve, reject);
+          } else {
+            resolve(result);
+          }
+        } catch (e) {
+          reject(e);
+        }
+      };
+    });
   };
 
   MyPromise.prototype.catch = function() {};
