@@ -8,7 +8,7 @@
   <body>
     <button id="btn">发送ajax请求</button>
     <script>
-      document.getElementById("btn").onclick = function() {
+      /* document.getElementById("btn").onclick = function() {
         // 使用jsonp解决跨域
         // 1. 创建script标签
         const script = document.createElement("script");
@@ -21,6 +21,25 @@
         script.src = `http://localhost:3000?callback=success`;
         // 4. 添加页面中生效（发送请求）
         document.body.appendChild(script);
+      }; */
+
+      document.getElementById("btn").onclick = function() {
+        // 发送ajax请求
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if (xhr.status >= 200 && xhr.status <= 299) {
+              console.log("请求成功了, ", xhr.responseText);
+              return;
+            }
+            console.log("请求失败了");
+          }
+        };
+        xhr.open("PUT", "http://localhost:3000");
+        xhr.setRequestHeader("Content-Type", "text/plain");
+        xhr.setRequestHeader("Authorization", "Bearer token~~~");
+        // xhr.setRequestHeader("xxx", "yyyy");
+        xhr.send();
       };
     </script>
   </body>

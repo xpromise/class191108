@@ -34,22 +34,62 @@ const querystring = require("querystring");
       缺点：只能支持GET请求（因为script只能发送GET请求）
 
     2. cors 官方方案
+      设置响应头，告诉客户端当前请求允许跨域
+      优点：能支持任意请求方式
+      缺点：兼容差
 
+    3. postMessage
+    4. 服务器代理（正向/反向）
+    5. websocket
+    。。。  
 */
+
+// jsonp
+// const server = http.createServer((req, res) => {
+//   // 接受请求参数
+
+//   const qs = querystring.parse(req.url.split("?")[1]);
+//   // 'success'
+//   const callback = qs.callback;
+
+//   // 定义要响应的数据
+//   const person = { name: "jack", age: 18 };
+//   res.setHeader("Content-Type", "application/javascript;charset=utf8");
+
+//   // success('{ "name": "jack", "age": 18 }')
+//   res.end(`${callback}(${JSON.stringify(person)})`);
+// });
 
 const server = http.createServer((req, res) => {
   // 接受请求参数
 
-  const qs = querystring.parse(req.url.split("?")[1]);
-  // 'success'
-  const callback = qs.callback;
-
   // 定义要响应的数据
   const person = { name: "jack", age: 18 };
-  res.setHeader("Content-Type", "application/javascript;charset=utf8");
+  // 允许所有地址都可以跨域
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  // 默认请求下，只能支持GET\POST请求
+  // 允许跨域的请求方式
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  // 默认请求下，Content-type允许的，其他请求头不行
+  // 允许跨域的请求头
+  res.setHeader("Access-Control-Allow-Headers", "Content-type, Authorization");
+  /*
+      特殊请求方式 PUT DELETE 或 特殊请求头，客户端在发送真正请求之前会发送一个预检请求
+      预检请求：用来提前访问服务器，检查当前请求是否允许跨域
+        如果允许跨域，就会发送下一个真正的请求
+        如果不允许跨域，真正的请求就不发了
+      预检请求请求方式是 OPTIONS  
+  */
+  // 缓存预检请求结果
+  res.setHeader("Access-Control-Max-Age", "86400");
 
-  // success('{ "name": "jack", "age": 18 }')
-  res.end(`${callback}(${JSON.stringify(person)})`);
+  console.log(req.method);
+
+  res.setHeader("Content-Type", "application/json;charset=utf8");
+  res.end(JSON.stringify(person));
 });
 
 server.listen(3000, "localhost", err => {
