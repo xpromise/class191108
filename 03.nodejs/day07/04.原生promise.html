@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      /*
+        Promise 一个异步编程的解决方案
+          作用：用来解决异步回调地狱问题（消除回调函数，以同步方式表达异步代码）
+
+          特点：
+            状态：
+              1. pending 初始化状态
+              2. resolved / fulfilled 成功状态
+              3. rejected 失败状态
+
+              注意：
+                同一时间，只能是一个状态
+                只能由初始化状态变成成功/失败状态
+                不能由成功变成失败，也不能由失败变成成功
+                （状态初始化为pending，只能改变一次，要么成功，要么失败）
+              怎么判断promise对象的状态？
+                then() / catch()
+
+            结果值：内部的结果值(value/reason)
+              resolve(value)
+              reject(reason)
+              怎么得到promise对象内部的结果值？
+                then((value) => {}) / await
+                catch((reason) => {})
+
+            怎么创建promise对象？
+              new Promise()  默认是pending
+              Promise.resolve() 默认是resolved
+              Promise.reject() 默认是rejected
+
+            其他方法：
+              Promise.all([promise1, promise2...])
+                返回值是一个新的promise对象，新promise对象状态看传入的promise
+                  如果传入的promise状态都是成功的状态，新promise也成功
+                  如果传入的promise状态有一个失败，新promise立即失败
+              Promise.race([promise1, promise2...])
+                返回值是一个新的promise对象，新promise对象状态看传入的promise
+                  只看传入的n个promise，哪一个传入promise状态先发生变化
+                  新promise和先发生变化promise的状态一致
+              Promise.allSettled([promise1, promise2...])  源自ES11/ES2020
+                返回值是一个新的promise对象，一定是成功状态
+                  promise对象内部状态值，包含传入的n个promise对象的状态值
+      */
+
+      // const promise1 = Promise.resolve();
+      // const promise2 = Promise.reject();
+
+      // console.log(promise1, promise2);
+
+      const promise1 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject(111);
+        }, 1000);
+      });
+
+      const promise2 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject(222);
+        }, 2000);
+      });
+
+      const promise3 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject(333);
+        }, 3000);
+      });
+
+      // 只有全部成功才成功，只要有一个失败即失败
+      /* Promise.all([promise1, promise2, promise3])
+        .then(value => {
+          console.log("成功了", value);
+        })
+        .catch(reason => {
+          console.log("失败了", reason);
+        }); */
+
+      // 只看执行最快那个，和它状态一致
+      /* Promise.race([promise2, promise1, promise3])
+        .then(value => {
+          console.log("成功了", value);
+        })
+        .catch(reason => {
+          console.log("失败了", reason);
+        }); */
+
+      // 等所有promise都干完在返回成功状态 
+      Promise.allSettled([promise1, promise2, promise3])
+        .then(value => {
+          console.log("成功了", value);
+        })
+        .catch(reason => {
+          console.log("失败了", reason);
+        });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>原生Promise</title>
+  </head>
+  <body>
+    <script>
+      const promise = new Promise((resolve, reject) => {
+        // 同步调用
+        // resolve();
+        reject();
+        console.log(111);
+      });
+      /*
+        promise对象状态：成功 -> 触发then的第一个回调
+        promise对象状态：失败 -> 触发then的第二个回调
+
+        then(onFulfilled, onRejected)
+          传了两个函数，这两个仅会执行一个
+
+          then方法默认返回值 成功状态promise对象
+          什么时候会返回失败状态promise对象呢？
+            1. 方法中函数的返回值是一个失败状态的promise对象
+            2. 方法报错
+          除了以上两个方式，默认就是成功promise
+      */
+      promise
+        .then(
+          () => {console.log(222);}, 
+          () => {
+            console.log(333);
+            // 返回一个失败状态promise对象
+            // return Promise.reject();
+            return new Promise((resovle, reject) => {
+              reject();
+            })
+            // 报错
+            // 抛异常（立即产生一个错误）
+            // throw 'error';
+          } // 默认返回成功状态promise对象
+        )
+        // 下一个then触发哪个？看上一个then的返回值promise状态
+        .then(
+          () => {console.log(444);},
+          () => {console.log(555);}
+        );
+
+      console.log(666);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>原生Promise</title>
+  </head>
+  <body>
+    <script>
+      const promise = new Promise((resolve, reject) => {
+        resolve("success 000");
+        // reject("error 000");
+        console.log(111);
+      });
+      promise
+        .then(222)
+        // .then((value) => value)
+        .catch(333)
+        // .catch((reason) => {throw reason})
+        .then(value => {
+          console.log(value);
+          console.log(444);
+        })
+        .catch(reason => {
+          console.log(reason);
+          console.log(555);
+        });
+      console.log(666);
+    </script>
+  </body>
+</html>

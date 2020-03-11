@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>原生Promise</title>
+  </head>
+  <body>
+    <script>
+      const promise = new Promise((resolve, reject) => {
+        resolve();
+        console.log(111);
+      });
+
+      promise
+        .then(
+          () => {
+            console.log(222);
+            return resolve();
+          },
+          () => {
+            console.log(333);
+          }
+        )
+        .then(
+          () => {
+            console.log(444);
+          },
+          () => {
+            console.log(555);
+          }
+        );
+
+      console.log(666);
+    </script>
+  </body>
+</html>
