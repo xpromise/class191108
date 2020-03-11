@@ -10,12 +10,38 @@
     <script>
       const promise = new MyPromise((resolve, reject) => {
         setTimeout(() => {
-          reject("error"); 
+          // reject("error");
           resolve("success");
         }, 1000);
       });
 
-      console.log(promise);
+      promise
+        .then(
+          value => {
+            /*
+              内部函数的返回值 直接决定 then方法的返回值
+              返回值 是Promise 状态是啥就是啥
+                    不是Promise（没有返回值） 默认成功 / 如果报错就是失败
+            */
+            console.log("成功111", value); // 返回成功状态
+            // throw 'error'; // 返回失败状态
+            return new MyPromise((resolve, reject) => {
+              // resolve(); // 返回成功状态
+              reject(); // 返回失败状态
+            })
+          },
+          reason => {
+            console.log("失败222", reason);
+          }
+        )
+        .then(
+          value => {
+            console.log("成功333", value);
+          },
+          reason => {
+            console.log("失败444", reason);
+          }
+        );
     </script>
   </body>
 </html>
