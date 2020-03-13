@@ -95,8 +95,53 @@
       }
     });
   };
-  MyPromise.reject = function() {};
-  MyPromise.all = function() {};
+
+  // 一定返回一个失败状态promise
+  MyPromise.reject = function(reason) {
+    return new MyPromise((resolve, reject) => {
+      reject(reason);
+    });
+  };
+
+  /*
+    只有所有成功返回值promise才成功
+    只要有一个失败返回值promise就失败
+  */
+  MyPromise.all = function(promises) {
+    return new MyPromise((resolve, reject) => {
+      const promisesLength = promises.length;
+      // 收集所有成功promise的结果值
+      const result = new Array(promisesLength);
+      // 成功promise的数量
+      let resolvedCount = 0;
+
+      // 遍历数组
+      promises.forEach((promise, index) => {
+        // 判断是否是promise
+        // 判断promise对象状态
+        MyPromise.resolve(promise).then(
+          value => {
+            // 将结果值收集
+            // result.push(value); // 这样做结果值顺序是乱序
+            // 按照顺序添加结果值
+            result[index] = value;
+            resolvedCount++;
+            if (resolvedCount === promisesLength) {
+              // 说明所有都成功了
+              resolve(result);
+            }
+          },
+          reason => {
+            // 失败
+            reject(reason);
+          }
+        );
+      });
+    });
+  };
+
+  MyPromise.race = function () {}
+  MyPromise.allSettled = function () {}
 
   w.MyPromise = MyPromise;
 })(window);

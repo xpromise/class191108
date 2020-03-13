@@ -29,11 +29,24 @@
         .then(value => console.log("777", value))
         .catch(reason => console.log("888", reason)); */
 
-      const p = Promise.resolve(
+      /* const p = Promise.resolve(
         new Promise((resolve, reject) => {
           reject(123);
         })
-      );
+      ); */
+
+      // const p = Promise.reject(new Promise((resolve, reject) => {}));
+
+      const p1 = new MyPromise(resolve => {
+        setTimeout(() => {
+          resolve(111);
+        }, 1000);
+      });
+      const p2 = MyPromise.resolve(222);
+      const p3 = MyPromise.reject(333);
+      const p4 = 444;
+
+      const p = MyPromise.all([p1, p2, p3, 444]);
       console.log(p);
     </script>
   </body>
