@@ -23,9 +23,19 @@
   ],
   "comments": [
     {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
+      "body": "华哥头发长了~",
+      "postId": 3,
+      "id": 3
+    },
+    {
+      "body": "华哥头发又长了~",
+      "postId": 3,
+      "id": 4
+    },
+    {
+      "body": "华哥头发又长了~",
+      "postId": 3,
+      "id": 5
     }
   ],
   "profile": {

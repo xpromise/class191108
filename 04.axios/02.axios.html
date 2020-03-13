@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>axios</title>
+  </head>
+  <body>
+    <button id="btn1">发送GET请求</button>
+    <button id="btn2">发送POST请求</button>
+    <button id="btn3">发送PUT请求</button>
+    <button id="btn4">发送DELETE请求</button>
+    <script src="https://cdn.bootcss.com/axios/0.19.2/axios.js"></script>
+    <script>
+      const btn1 = document.getElementById("btn1");
+      const btn2 = document.getElementById("btn2");
+      const btn3 = document.getElementById("btn3");
+      const btn4 = document.getElementById("btn4");
+
+      // 发送GET请求 --> 代表查询/获取
+      btn1.onclick = function() {
+        axios({
+          method: "GET",
+          url: "http://localhost:3000/comments",
+          params: {
+            // GET/DELETE请求的查询字符串参数
+            postId: 3
+          }
+        })
+          .then(response => {
+            console.log("请求成功:", response);
+          })
+          .catch(err => {
+            console.log("请求失败:", err);
+          });
+      };
+
+      // 发送POST请求 --> 代表新增
+      btn2.onclick = function() {
+        axios({
+          method: "POST",
+          url: "http://localhost:3000/comments",
+          data: {
+            // PUT/POST请求的请求体参数
+            body: "华哥头发又长了~",
+            postId: 3
+          }
+        })
+          .then(response => {
+            console.log("请求成功:", response);
+          })
+          .catch(err => {
+            console.log("请求失败:", err);
+          });
+      };
+
+      // 发送PUT请求 --> 代表修改
+      btn3.onclick = function() {
+        axios({
+          method: "PUT",
+          url: "http://localhost:3000/comments/2",
+          data: {
+            // PUT/POST请求的请求体参数
+            // 参数除了id都要传
+            body: "华哥头发又少了~~",
+            postId: 3
+          }
+        })
+          .then(response => {
+            console.log("请求成功:", response);
+          })
+          .catch(err => {
+            console.log("请求失败:", err);
+          });
+      };
+
+      // 发送DELETE请求 --> 代表删除
+      btn4.onclick = function() {
+        axios({
+          method: "DELETE",
+          url: "http://localhost:3000/comments/2",
+          params: {} // GET/DELETE请求的查询字符串参数
+        })
+          .then(response => {
+            console.log("请求成功:", response);
+          })
+          .catch(err => {
+            console.log("请求失败:", err);
+          });
+      };
+    </script>
+  </body>
+</html>
