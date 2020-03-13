@@ -17,11 +17,15 @@
       const btn3 = document.getElementById("btn3");
       const btn4 = document.getElementById("btn4");
 
+      // axios全局配置
+      // 后面请求都会加上全局配置
+      axios.defaults.baseURL = "http://localhost:3000";
+
       // 发送GET请求 --> 代表查询/获取
       btn1.onclick = function() {
         axios({
           method: "GET",
-          url: "http://localhost:3000/comments",
+          url: "/comments",
           params: {
             // GET/DELETE请求的查询字符串参数
             postId: 3
@@ -39,7 +43,7 @@
       btn2.onclick = function() {
         axios({
           method: "POST",
-          url: "http://localhost:3000/comments",
+          url: "/comments",
           data: {
             // PUT/POST请求的请求体参数
             body: "华哥头发又长了~",
@@ -58,7 +62,7 @@
       btn3.onclick = function() {
         axios({
           method: "PUT",
-          url: "http://localhost:3000/comments/2",
+          url: "/comments/2",
           data: {
             // PUT/POST请求的请求体参数
             // 参数除了id都要传
@@ -78,7 +82,7 @@
       btn4.onclick = function() {
         axios({
           method: "DELETE",
-          url: "http://localhost:3000/comments/2",
+          url: "/comments/2",
           params: {} // GET/DELETE请求的查询字符串参数
         })
           .then(response => {

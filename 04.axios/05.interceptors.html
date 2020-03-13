@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>axios</title>
+  </head>
+  <body>
+    <script src="https://cdn.bootcss.com/axios/0.19.2/axios.js"></script>
+
+    <script>
+      // 设置请求拦截器: 在发送请求之前触发
+      // 特点：后添加的先执行~
+      axios.interceptors.request.use(
+        function(config) {
+          console.log("请求的成功拦截器 111");
+          // 请求拦截器中必须要return config
+          // config 是请求的配置对象 axios(config)
+          // console.log(config);
+          return config;
+        },
+        function(error) {
+          console.log("请求的失败拦截器 111");
+          // 保证后面触发触发的是失败回调
+          return Promise.reject(error);
+        }
+      );
+
+      axios.interceptors.request.use(
+        function(config) {
+          console.log("请求的成功拦截器 222");
+          return config;
+        },
+        function(error) {
+          console.log("请求的失败拦截器 222");
+          return Promise.reject(error);
+        }
+      );
+
+      // 设置响应拦截器：在接受到响应时触发
+      // 特点：先添加的先执行~（按照顺序触发）
+      axios.interceptors.response.use(
+        function(response) {
+          console.log("响应的成功拦截器 111");
+          // console.log(response); // 响应结果
+          return response;
+        },
+        function(error) {
+          console.log("响应的失败拦截器 111");
+          return Promise.reject(error);
+        }
+      );
+
+      axios.interceptors.response.use(
+        function(response) {
+          console.log("响应的成功拦截器 222");
+          return response;
+        },
+        function(error) {
+          console.log("响应的失败拦截器 222");
+          return Promise.reject(error);
+        }
+      );
+
+      // 发送请求
+      axios
+        .get("http://localhost:3000/comments")
+        .then(response => {
+          console.log("请求成功回调~~ 333", response);
+        })
+        .catch(err => {
+          console.log("请求失败回调~~ 333", err);
+        });
+    </script>
+  </body>
+</html>

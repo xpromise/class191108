@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>axios</title>
+  </head>
+  <body>
+    <script src="https://cdn.bootcss.com/axios/0.19.2/axios.js"></script>
+    <script>
+      /* axios.defaults.baseURL = 'http://localhost:3000';
+
+
+      axios({
+        url: '/comments',
+        method: 'GET'
+      })
+
+      axios({
+        url: '/comments',
+        method: 'POST',
+        data: {}
+      })
+
+
+      axios({
+        url: 'http://localhost:4000/posts',
+        method: 'GET'
+      })
+      
+      axios({
+        url: 'http://localhost:4000/posts',
+        method: 'POST',
+        data: {}
+      }) */
+
+      console.dir(axios);
+
+      // 创建axios的实例对象（实际上创建新axios函数）
+      const instance1 = axios.create({
+        baseURL: "http://localhost:3000"
+      });
+
+      console.dir(instance1);
+
+      const instance2 = axios.create({
+        baseURL: "http://localhost:4000"
+      });
+
+      instance1({
+        url: "/comments",
+        method: "GET"
+      });
+
+      instance1({
+        url: "/comments",
+        method: "POST",
+        data: {}
+      });
+
+      instance2({
+        url: "/posts",
+        method: "GET"
+      });
+
+      instance2({
+        url: "/posts",
+        method: "POST",
+        data: {}
+      });
+    </script>
+  </body>
+</html>
