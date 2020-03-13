@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>axios</title>
+  </head>
+  <body>
+    <button id="btn1">发送GET请求</button>
+    <button id="btn2">发送POST请求</button>
+    <button id="btn3">发送PUT请求</button>
+    <button id="btn4">发送DELETE请求</button>
+    <script src="https://cdn.bootcss.com/axios/0.19.2/axios.js"></script>
+    <script>
+      const btn1 = document.getElementById("btn1");
+      const btn2 = document.getElementById("btn2");
+      const btn3 = document.getElementById("btn3");
+      const btn4 = document.getElementById("btn4");
+
+      // 发送GET请求 --> 代表查询/获取
+      btn1.onclick = function() {
+        axios
+          .get("http://localhost:3000/posts")
+          // .get("http://localhost:3000/posts?id=1") // 代表找id=1的所有数据
+          // .get("http://localhost:3000/posts", { params: { id: 1 } }) // 代表找id=1的所有数据
+          // .get("http://localhost:3000/posts/1") // 代表只找id=1的数据
+          .then(response => {
+            console.log("请求成功", response);
+          })
+          .catch(err => {
+            console.log("请求失败", err);
+          });
+      };
+
+      // 发送POST请求 --> 代表新增
+      btn2.onclick = function() {
+        axios
+          .post("http://localhost:3000/posts", {
+            title: "title4444",
+            author: "author4444"
+          })
+          .then(response => {
+            console.log("请求成功", response);
+          })
+          .catch(err => {
+            console.log("请求失败", err);
+          });
+      };
+
+      // 发送PUT请求 --> 代表修改
+      btn3.onclick = function() {
+        axios
+          .put("http://localhost:3000/posts/2", {
+            title: "titie222~~~~~~~~~",
+            author: "author222~~~~~~~~~"
+          })
+          .then(response => {
+            console.log("请求成功", response);
+          })
+          .catch(err => {
+            console.log("请求失败", err);
+          });
+      };
+
+      // 发送DELETE请求 --> 代表删除
+      btn4.onclick = function() {
+        axios
+          .delete("http://localhost:3000/posts/2")
+          .then(response => {
+            console.log("请求成功", response);
+          })
+          .catch(err => {
+            console.log("请求失败", err);
+          });
+      };
+    </script>
+  </body>
+</html>
