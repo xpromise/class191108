@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>自定义Promise</title>
+  </head>
+  <body>
+    <script src="./01.MyPromise.js"></script>
+    <script>
+      /* const promise = new MyPromise((resolve, reject) => {
+        setTimeout(() => {
+          reject("error");
+          // resolve("success");
+        }, 1000);
+      });
+
+      promise
+        .then(111)
+        .catch(222)
+        .then(
+          value => console.log("333", value),
+          reason => console.log("444", reason)
+        )
+        .then(
+          value => console.log("555", value),
+          reason => console.log("666", reason)
+        )
+        .then(value => console.log("777", value))
+        .catch(reason => console.log("888", reason)); */
+
+      const p = Promise.resolve(
+        new Promise((resolve, reject) => {
+          reject(123);
+        })
+      );
+      console.log(p);
+    </script>
+  </body>
+</html>
