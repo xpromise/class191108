@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>axios</title>
+  </head>
+  <body>
+    <button id="btn1">发送ajax请求</button>
+    <button id="btn2">取消发送ajax请求</button>
+    <script src="https://cdn.bootcss.com/axios/0.19.2/axios.js"></script>
+    <script>
+      let cancel;
+
+      /* document.getElementById("btn1").onclick = function() {
+        const CancelToken = axios.CancelToken;
+        const source = CancelToken.source();
+        cancel = source.cancel;
+        // 发送请求(提前开启服务器) http://localhost:3000/products
+        axios
+          .get("http://localhost:3000/products", {
+            cancelToken: source.token
+          })
+          .then(response => {
+            console.log("请求成功", response);
+          })
+          .catch(err => {
+            // 判断是请求失败还是取消请求
+            if (axios.isCancel(err)) {
+              console.log("取消请求成功", err);
+            } else {
+              console.log("请求失败", err);
+            }
+          });
+      }; */
+
+      document.getElementById("btn1").onclick = function() {
+        const CancelToken = axios.CancelToken;
+        // 发送请求(提前开启服务器) http://localhost:3000/products
+        axios
+          .get("http://localhost:3000/products", {
+            cancelToken: new CancelToken(function(c) {
+              cancel = c;
+            })
+          })
+          .then(response => {
+            console.log("请求成功", response);
+          })
+          .catch(err => {
+            // 判断是请求失败还是取消请求
+            if (axios.isCancel(err)) {
+              console.log("取消请求成功", err);
+            } else {
+              console.log("请求失败", err);
+            }
+          });
+      };
+
+      document.getElementById("btn2").onclick = function() {
+        // 调用取消请求的方法
+        if (typeof cancel === "function") {
+          cancel("取消请求啦啦啦啦啦啦啦");
+        } else {
+          console.log("没有要取消的请求");
+        }
+      };
+    </script>
+  </body>
+</html>
