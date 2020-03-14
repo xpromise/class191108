@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>axios</title>
+  </head>
+  <body>
+    <button id="btn1">发送ajax请求111</button>
+    <button id="btn2">发送ajax请求222</button>
+    <button id="btn3">取消发送ajax请求</button>
+    <script src="https://cdn.bootcss.com/axios/0.19.2/axios.js"></script>
+    <script>
+      /*
+        点击按钮1 发送请求111
+        点击按钮2 需要把其他请求（请求111）取消掉，在发送请求222
+        （发送新的请求时，取消上一个请求）
+      */
+
+      let cancel;
+
+      document.getElementById("btn1").onclick = function() {
+        const CancelToken = axios.CancelToken;
+
+        // 在发送新请求之前，取消上一个请求
+        if (cancel) {
+          // 说明有上一个请求
+          cancel("取消请求啦啦啦~~~");
+        }
+
+        axios
+          .get("http://localhost:3000/products", {
+            cancelToken: new CancelToken(function(c) {
+              cancel = c;
+            })
+          })
+          .then(response => {
+            console.log("请求成功", response);
+            cancel = null;
+          })
+          .catch(err => {
+            // 判断是请求失败还是取消请求
+            if (axios.isCancel(err)) {
+              console.log("取消请求成功", err);
+            } else {
+              cancel = null;
+              console.log("请求失败", err);
+            }
+          })
+      };
+
+      document.getElementById("btn2").onclick = function() {
+        const CancelToken = axios.CancelToken;
+        // 发送请求(提前开启服务器) http://localhost:3000/products
+
+        // 在发送新请求之前，取消上一个请求
+        if (cancel) {
+          // 说明有上一个请求
+          cancel("取消请求啦啦啦~~~");
+        }
+
+        axios
+          .post(
+            "http://localhost:3000/products",
+            { name: "华为mate10Pro", price: 5000 },
+            {
+              cancelToken: new CancelToken(function(c) {
+                cancel = c;
+              })
+            }
+          )
+          .then(response => {
+            cancel = null;
+            console.log("请求成功", response);
+          })
+          .catch(err => {
+            // 判断是请求失败还是取消请求
+            if (axios.isCancel(err)) {
+              console.log("取消请求成功", err);
+            } else {
+              cancel = null;
+              console.log("请求失败", err);
+            }
+          })
+      };
+
+      document.getElementById("btn3").onclick = function() {
+        // 调用取消请求的方法
+        if (typeof cancel === "function") {
+          cancel("取消请求啦啦啦啦啦啦啦");
+        } else {
+          console.log("没有要取消的请求");
+        }
+      };
+    </script>
+  </body>
+</html>

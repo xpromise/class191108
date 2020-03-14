@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>axios</title>
+  </head>
+  <body>
+    <button id="btn1">发送ajax请求111</button>
+    <button id="btn2">发送ajax请求222</button>
+    <button id="btn3">取消发送ajax请求</button>
+    <script src="https://cdn.bootcss.com/axios/0.19.2/axios.js"></script>
+    <script>
+      /*
+        需求：
+          1. 发送请求之前取消上一个请求 (请求拦截器)
+          2. 设置cancelToken  (请求拦截器)
+          3. 接受到响应时，将 cancel = null (响应拦截器)
+          每次发送请求都要做以上三件事，希望复用
+
+          拦截器：专门用来复用发送请求/接受响应的公共代码
+          执行流程： 请求拦截器 --> 发送请求 --> 响应拦截器 --> 请求响应
+      */
+      let cancel;
+      const CancelToken = axios.CancelToken;
+      // 使用原来axios
+      axios.defaults.baseURL = "http://localhost:3000";
+      
+      // 使用新的axios（新axios上面没有CancelToken等方法的）
+      // axios = axios.create({
+      //   baseURL:  "http://localhost:3000"
+      // })
+
+      axios.interceptors.request.use(
+        config => {
+          // 1. 发送请求之前取消上一个请求
+          if (cancel) {
+            // 说明有上一个请求
+            cancel("取消上一个请求~~~");
+          }
+
+          // 2. 设置cancelToken
+          config.cancelToken = new CancelToken(function(c) {
+            cancel = c;
+          });
+
+          return config;
+        },
+        error => {
+          return Promise.reject(error);
+        }
+      );
+
+      axios.interceptors.response.use(
+        response => {
+          // 请求成功
+          // 3. 接受到响应时，将 cancel = null (响应拦截器)
+          cancel = null;
+          return response;
+        },
+        error => {
+          // 请求失败
+          // 3. 接受到响应时，将 cancel = null (响应拦截器)
+          if (!axios.isCancel(error)) {
+            cancel = null;
+          }
+
+          return Promise.reject(error);
+        }
+      );
+
+      document.getElementById("btn1").onclick = function() {
+        axios
+          .get("/products")
+          .then(response => {
+            console.log("请求成功", response);
+          })
+          .catch(err => {
+            // 判断是请求失败还是取消请求
+            if (axios.isCancel(err)) {
+              console.log("取消请求成功", err);
+            } else {
+              console.log("请求失败", err);
+            }
+          });
+      };
+
+      document.getElementById("btn2").onclick = function() {
+        axio
+          .post("/products", {
+            name: "华为mate10Pro",
+            price: 5000
+          })
+          .then(response => {
+            console.log("请求成功", response);
+          })
+          .catch(err => {
+            // 判断是请求失败还是取消请求
+            if (axios.isCancel(err)) {
+              console.log("取消请求成功", err);
+            } else {
+              console.log("请求失败", err);
+            }
+          });
+      };
+
+      document.getElementById("btn3").onclick = function() {
+        // 调用取消请求的方法
+        if (typeof cancel === "function") {
+          cancel("取消请求啦啦啦啦啦啦啦");
+        } else {
+          console.log("没有要取消的请求");
+        }
+      };
+    </script>
+  </body>
+</html>

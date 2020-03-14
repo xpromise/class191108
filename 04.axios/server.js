@@ -105,6 +105,7 @@ function sendResponse(res, data) {
     "Access-Control-Allow-Method",
     "GET, POST, PUT, DELETE, OPTIONS"
   );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Access-Control-Max-Age", 86400);
   res.setHeader("Content-Type", "application/json;charset=utf8");
   res.end(JSON.stringify(data));
