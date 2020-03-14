@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-var utils = require('./utils');
-var bind = require('./helpers/bind');
-var Axios = require('./core/Axios');
-var mergeConfig = require('./core/mergeConfig');
+var utils = require("./utils");
+var bind = require("./helpers/bind");
+var Axios = require("./core/Axios");
+var mergeConfig = require("./core/mergeConfig");
 // axios的默认配置文件
-var defaults = require('./defaults');
+var defaults = require("./defaults");
 
 /**
  * Create an instance of Axios
@@ -46,21 +46,25 @@ var axios = createInstance(defaults);
 // Expose Axios class to allow class inheritance
 axios.Axios = Axios;
 
-// Factory for creating new instances
+/*
+  创建新axios函数的方法
+  新axios和原（旧）axios的联系：都有Axios构造函数的属性和方法，本质上都是一个request函数
+  新axios和原（旧）axios的区别：原（旧）axios具备 create 、CancelToken 等方法，而新的 axios 没有
+*/
 axios.create = function create(instanceConfig) {
   return createInstance(mergeConfig(axios.defaults, instanceConfig));
 };
 
-// Expose Cancel & CancelToken
-axios.Cancel = require('./cancel/Cancel');
-axios.CancelToken = require('./cancel/CancelToken');
-axios.isCancel = require('./cancel/isCancel');
+// 添加取消请求的方法
+axios.Cancel = require("./cancel/Cancel");
+axios.CancelToken = require("./cancel/CancelToken");
+axios.isCancel = require("./cancel/isCancel");
 
-// Expose all/spread
+// 添加其他请求的方法
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = require('./helpers/spread');
+axios.spread = require("./helpers/spread");
 
 module.exports = axios;
 

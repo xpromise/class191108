@@ -26,7 +26,7 @@ module.exports = function dispatchRequest(config) {
   // Ensure headers exist
   config.headers = config.headers || {};
 
-  // Transform request data
+  // 转换请求体数据
   config.data = transformData(
     config.data,
     config.headers,
@@ -52,7 +52,7 @@ module.exports = function dispatchRequest(config) {
   return adapter(config).then(function onAdapterResolution(response) {
     throwIfCancellationRequested(config);
 
-    // Transform response data
+    // 转换响应体数据
     response.data = transformData(
       response.data,
       response.headers,

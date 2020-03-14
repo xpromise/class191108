@@ -13,6 +13,7 @@ module.exports = function xhrAdapter(config) {
     var requestData = config.data;
     var requestHeaders = config.headers;
 
+    // 判断请求体是否是FormData
     if (utils.isFormData(requestData)) {
       delete requestHeaders['Content-Type']; // Let the browser set it
     }
@@ -25,11 +26,13 @@ module.exports = function xhrAdapter(config) {
       var password = config.auth.password || '';
       requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
     }
-
+    // 获取完整请求路径 
     var fullPath = buildFullPath(config.baseURL, config.url);
+    // config.method.toUpperCase() 请求方式
+    // buildURL(fullPath, config.params, config.paramsSerializer) 请求地址（加上get请求查询字符串参数）
     request.open(config.method.toUpperCase(), buildURL(fullPath, config.params, config.paramsSerializer), true);
 
-    // Set the request timeout in MS
+    // 设置请求超时时间
     request.timeout = config.timeout;
 
     // Listen for ready state
@@ -46,16 +49,18 @@ module.exports = function xhrAdapter(config) {
         return;
       }
 
-      // Prepare the response
+      // 解析响应头
       var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
+      // 解析响应体
       var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
+      // 生成响应对象
       var response = {
-        data: responseData,
-        status: request.status,
-        statusText: request.statusText,
-        headers: responseHeaders,
-        config: config,
-        request: request
+        data: responseData, // 响应体数据
+        status: request.status, // 响应状态码
+        statusText: request.statusText, // 响应文本
+        headers: responseHeaders, // 响应头
+        config: config,   // 请求配置对象
+        request: request // xhr对象
       };
 
       settle(resolve, reject, response);
