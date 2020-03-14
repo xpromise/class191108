@@ -14,18 +14,24 @@ function CancelToken(executor) {
   }
 
   var resolvePromise;
+  // 给实例对象添加promise属性，值为promise对象
+  // 这个promise在未来有且只能变成成功
   this.promise = new Promise(function promiseExecutor(resolve) {
     resolvePromise = resolve;
   });
 
   var token = this;
+  // 同步调用
+  // cancel就是触发取消请求的函数
   executor(function cancel(message) {
+    // 保证取消请求只能取消一次~
     if (token.reason) {
       // Cancellation has already been requested
       return;
     }
 
     token.reason = new Cancel(message);
+    // 将 this.promise 改成成功状态
     resolvePromise(token.reason);
   });
 }
@@ -49,8 +55,8 @@ CancelToken.source = function source() {
     cancel = c;
   });
   return {
-    token: token,
-    cancel: cancel
+    token: token, // CancelToken得实例，将来要设置到config.cancelToken
+    cancel: cancel // 触发取消请求得方法
   };
 };
 

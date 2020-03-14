@@ -167,8 +167,9 @@ module.exports = function xhrAdapter(config) {
         if (!request) {
           return;
         }
-
+        // （中断）取消请求得方法
         request.abort();
+        // 将发送请求返回得promise变成失败状态
         reject(cancel);
         // Clean up request
         request = null;
