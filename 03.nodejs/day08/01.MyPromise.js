@@ -164,7 +164,7 @@
     最终返回值一定是成功的状态promise，并里面包含所有传入promise的结果值（一一对应）
   */
   MyPromise.allSettled = function(promises) {
-    return new MyPromise((resolve) => {
+    return new MyPromise(resolve => {
       const promisesLength = promises.length;
       // 收集所有成功promise的结果值
       const result = new Array(promisesLength);
@@ -175,10 +175,13 @@
       promises.forEach((promise, index) => {
         // 判断是否是promise
         // 判断promise对象状态
-        /* MyPromise.resolve(promise).then(
+        MyPromise.resolve(promise).then(
           value => {
             // 收集结果值
-            result[index] = value;
+            result[index] = {
+              status: "resolved",
+              value: value
+            };
             resolvedCount++;
             if (resolvedCount === promisesLength) {
               // 说明所有都成功了
@@ -187,28 +190,22 @@
           },
           reason => {
             // 收集结果值
-            result[index] = reason;
+            result[index] = {
+              status: "rejected",
+              reason: reason
+            };
             resolvedCount++;
             if (resolvedCount === promisesLength) {
               // 说明所有都成功了
               resolve(result);
             }
           }
-        ); */
+        );
         /*
           then 成功
           catch 失败
           finally 成功/失败
         */
-        MyPromise.resolve(promise).finally(value => {
-          // 收集结果值
-          result[index] = value;
-          resolvedCount++;
-          if (resolvedCount === promisesLength) {
-            // 说明所有都成功了
-            resolve(result);
-          }
-        });
       });
     });
   };
