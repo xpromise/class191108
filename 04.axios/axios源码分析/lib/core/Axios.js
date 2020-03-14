@@ -12,40 +12,47 @@ var mergeConfig = require('./mergeConfig');
  * @param {Object} instanceConfig The default config for the instance
  */
 function Axios(instanceConfig) {
+  // 初始化实例对象默认配置
   this.defaults = instanceConfig;
+  // 初始化拦截器方法
   this.interceptors = {
+    // 请求拦截器
     request: new InterceptorManager(),
+    // 响应拦截器
     response: new InterceptorManager()
   };
 }
 
 /**
- * Dispatch a request
+ * 发送请求的函数
  *
  * @param {Object} config The config specific for this request (merged with this.defaults)
  */
 Axios.prototype.request = function request(config) {
   /*eslint no-param-reassign:0*/
-  // Allow for axios('example/url'[, config]) a la fetch API
   if (typeof config === 'string') {
+    // axios(url[, config])
     config = arguments[1] || {};
     config.url = arguments[0];
   } else {
+    // axios(config)
     config = config || {};
   }
-
+  // 合并配置（将默认配置和传入配置合并，生成一个新配置）
   config = mergeConfig(this.defaults, config);
 
-  // Set config.method
+  // 设置 config.method
   if (config.method) {
     config.method = config.method.toLowerCase();
   } else if (this.defaults.method) {
     config.method = this.defaults.method.toLowerCase();
   } else {
+    // 默认为 get 请求
     config.method = 'get';
   }
 
-  // Hook up interceptors middleware
+  // 发送请求
+  // 请求拦截器 --> 发送请求 --> 响应拦截器 --> 请求函数
   var chain = [dispatchRequest, undefined];
   var promise = Promise.resolve(config);
 
@@ -64,12 +71,15 @@ Axios.prototype.request = function request(config) {
   return promise;
 };
 
+// 返回一个完整的url(请求地址、请求参数。。。)
 Axios.prototype.getUri = function getUri(config) {
+  // 合并配置
   config = mergeConfig(this.defaults, config);
   return buildURL(config.url, config.params, config.paramsSerializer).replace(/^\?/, '');
 };
 
-// Provide aliases for supported request methods
+// forEach(obj, fn) 既能遍历数组也能遍历对象
+// 给Axios.prototype添加请求方法 get/post/put/delete...
 utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
   /*eslint func-names:0*/
   Axios.prototype[method] = function(url, config) {

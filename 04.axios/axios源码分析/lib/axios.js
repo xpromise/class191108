@@ -4,6 +4,7 @@ var utils = require('./utils');
 var bind = require('./helpers/bind');
 var Axios = require('./core/Axios');
 var mergeConfig = require('./core/mergeConfig');
+// axios的默认配置文件
 var defaults = require('./defaults');
 
 /**
@@ -13,19 +14,33 @@ var defaults = require('./defaults');
  * @return {Axios} A new instance of Axios
  */
 function createInstance(defaultConfig) {
+  /*
+    创建Axios实例对象：context
+    context属性：defaults 、interceptors
+    context原型上方法：request getUri get post put delete...
+  */
   var context = new Axios(defaultConfig);
+  // 将 Axios.prototype.request 方法的 this 指向 context
+  // instance 是一个 request 函数，this 指向为 context
+  // instance 就是我们使用的 axios
   var instance = bind(Axios.prototype.request, context);
 
-  // Copy axios.prototype to instance
+  // 将 Axios.prototype 所有方法克隆到 instance 上
+  // 为了得到： request getUri get post put delete...
   utils.extend(instance, Axios.prototype, context);
 
-  // Copy context to instance
+  // 将 context 上面所有属性克隆到 instance 上
+  // 为了得到：defaults 、interceptors
   utils.extend(instance, context);
 
   return instance;
 }
 
-// Create the default instance to be exported
+/*
+  instance === axios 本质上就是request函数，继承Axios构造函数的属性和方法
+  Axios   构造函数
+  context Axios构造函数的实例对象
+*/
 var axios = createInstance(defaults);
 
 // Expose Axios class to allow class inheritance
