@@ -4,6 +4,8 @@
   
 */
 const { resolve } = require("path");
+// 插件需要引入使用，而loader不需要引入
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   // entry
@@ -34,10 +36,42 @@ module.exports = {
             loader: "less-loader" // 将 Less 编译成 CSS
           }
         ]
+      },
+      {
+        // 处理图片文件
+        test: /\.(png|jpg|gif)$/,
+        // use: [
+        //   {
+        //     loader: 'url-loader',
+        //     options: {
+        //       limit: 8192
+        //     }
+        //   }
+        // ]
+        loader: "url-loader",
+        options: {
+          /*
+            11kb以下的图片会被base64处理 
+            优点：图片不会发送额外的请求，随着html文件一起被请求下来（减少服务器压力）
+            缺点：体积会变的更大
+            所以一般针对小图片来做
+          */
+          limit: 11000,
+          // [hash:10] hash值取10位
+          // [ext] 原来文件扩展名是啥就是啥
+          name: "[hash:10].[ext]"
+        }
       }
     ]
   },
   // plugins
+  plugins: [
+    new HtmlWebpackPlugin({
+      // 以 './src/index.html' 为模板创建新的html文件
+      // 新html文件结构和原来一样 并且 会自动引入webpack打包生成的js/css资源
+      template: "./src/index.html"
+    })
+  ],
   // mode
   mode: "development" // 开发环境
 };
