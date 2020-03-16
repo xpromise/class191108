@@ -3,6 +3,7 @@
 var utils = require('./../utils');
 
 function InterceptorManager() {
+  // 存储所有拦截器得数组容器
   this.handlers = [];
 }
 
@@ -14,11 +15,15 @@ function InterceptorManager() {
  *
  * @return {Number} An ID used to remove interceptor later
  */
+// axios.interceptors.request.use(fulfilled, rejected)
+// axios.interceptors.response.use(fulfilled, rejected)
+// 将成功/失败回调添加到拦截器数组中
 InterceptorManager.prototype.use = function use(fulfilled, rejected) {
   this.handlers.push({
     fulfilled: fulfilled,
     rejected: rejected
   });
+  // 返回当前下标
   return this.handlers.length - 1;
 };
 
@@ -27,6 +32,7 @@ InterceptorManager.prototype.use = function use(fulfilled, rejected) {
  *
  * @param {Number} id The ID that was returned by `use`
  */
+// 删除拦截器方法  id就是下标
 InterceptorManager.prototype.eject = function eject(id) {
   if (this.handlers[id]) {
     this.handlers[id] = null;
@@ -41,6 +47,7 @@ InterceptorManager.prototype.eject = function eject(id) {
  *
  * @param {Function} fn The function to call for each interceptor
  */
+// 遍历拦截器数组
 InterceptorManager.prototype.forEach = function forEach(fn) {
   utils.forEach(this.handlers, function forEachHandler(h) {
     if (h !== null) {
