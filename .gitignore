@@ -2,6 +2,7 @@
 # 忽略文件夹
 node_modules/
 .idea/
+build/
 
 # 忽略文件
 签到.html

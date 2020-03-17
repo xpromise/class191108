@@ -14,7 +14,8 @@ module.exports = {
   // output
   output: {
     path: resolve(__dirname, "../build"), // 输出目录
-    filename: "[name].js" // 输出文件名
+    filename: "static/js/[name].js", // 输出文件名
+    publicPath: '/', // 公共引入资源路径
   },
   // loader
   module: {
@@ -61,7 +62,7 @@ module.exports = {
           limit: 11000,
           // [hash:10] hash值取10位
           // [ext] 原来文件扩展名是啥就是啥
-          name: "[hash:10].[ext]",
+          name: "static/media/[hash:10].[ext]",
           // 关闭ES6模块化，使用Commonjs模块化
           // 解决 html 中 img src 为 [object Module]
           esModule: false
@@ -76,7 +77,7 @@ module.exports = {
         exclude: /\.(less|jpg|png|gif|js|html)$/,
         loader: "file-loader",
         options: {
-          name: "[hash:10].[ext]"
+          name: "static/media/[hash:10].[ext]"
         }
       }
     ]
@@ -98,7 +99,7 @@ module.exports = {
       }
     }),
     new MiniCssExtractPlugin({
-      filename: "[name].css"
+      filename: "static/css/[name].css"
       // chunkFilename: "[id].css"
     }),
     // 压缩css的插件
