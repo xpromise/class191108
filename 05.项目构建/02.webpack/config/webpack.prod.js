@@ -4,6 +4,9 @@
 const { resolve } = require("path");
 // 插件需要引入使用，而loader不需要引入
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   // entry
@@ -11,7 +14,7 @@ module.exports = {
   // output
   output: {
     path: resolve(__dirname, "../build"), // 输出目录
-    filename: "build.js" // 输出文件名
+    filename: "[name].js" // 输出文件名
   },
   // loader
   module: {
@@ -25,7 +28,8 @@ module.exports = {
         use: [
           // use数组执行顺序：从下到上、从右往左
           {
-            loader: "style-loader" // 从js文件中找到css字符串，并创建style标签插入页面中
+            // loader: "style-loader" // 从js文件中找到css字符串，并创建style标签插入页面中
+            loader: MiniCssExtractPlugin.loader // 从js文件中找到css字符串，提取css成单独css文件
           },
           {
             loader: "css-loader" // 将 CSS 转化成 字符串，会以 CommonJS 模块化整合js文件中
@@ -60,7 +64,7 @@ module.exports = {
           name: "[hash:10].[ext]",
           // 关闭ES6模块化，使用Commonjs模块化
           // 解决 html 中 img src 为 [object Module]
-          esModule: false, 
+          esModule: false
         }
       },
       {
@@ -70,9 +74,9 @@ module.exports = {
       {
         // 排除文件
         exclude: /\.(less|jpg|png|gif|js|html)$/,
-        loader: 'file-loader',
+        loader: "file-loader",
         options: {
-          name: "[hash:10].[ext]",
+          name: "[hash:10].[ext]"
         }
       }
     ]
@@ -82,29 +86,33 @@ module.exports = {
     new HtmlWebpackPlugin({
       // 以 './src/index.html' 为模板创建新的html文件
       // 新html文件结构和原来一样 并且 会自动引入webpack打包生成的js/css资源
-      template: "./src/index.html"
-    })
+      template: "./src/index.html",
+      // 压缩选项
+      minify: {
+        collapseWhitespace: true, // 去除换行符/空格
+        removeComments: true, // 去除注释
+        removeRedundantAttributes: true, // 去除默认值标签属性
+        removeScriptTypeAttributes: true, // 删除script type
+        removeStyleLinkTypeAttributes: true, // 删除link type
+        useShortDoctype: true // 使用短的doctype（html5）
+      }
+    }),
+    new MiniCssExtractPlugin({
+      filename: "[name].css"
+      // chunkFilename: "[id].css"
+    }),
+    // 压缩css的插件
+    new OptimizeCssAssetsPlugin({
+      // assetNameRegExp: /\.css$/g,
+      // cssProcessor: require('cssnano'),
+      cssProcessorPluginOptions: {
+        preset: ["default", { discardComments: { removeAll: true } }]
+      }
+      // canPrint: true
+    }),
+    // 自动删除output.path输出目录的文件
+    new CleanWebpackPlugin()
   ],
   // mode
-  mode: "development", // 开发环境
-  /*
-    devServer 用来自动化
-      npm i webpack-dev-server -D
-    之前启动指令是：webpack （注意：这个启动指令不会加载devServer配置）
-    要想启动devServer，必须使用 npx webpack-dev-server
-    
-    webpack 和 webpack-dev-server的区别：
-      1. 只有webpack-dev-server才能启动devServer配置，而webpack不行
-      2. webpack-dev-server是在内存中构建，没有输出。 webpack会有输出到build下面 
-  */
-  devServer: {
-    contentBase: resolve(__dirname, '../build'), // 运行（构建后）代码的根目录
-    compress: true, // 启动gzip压缩
-    port: 3000, // 端口号
-    host: 'localhost',
-    open: true, // 自动打开浏览器
-    overlay: false, // 不要webpack错误在浏览器全屏提示
-    quiet: true, // 不要打包打印信息
-    // progress: true, // 进度条提示
-  }
+  mode: "production" // 生产环境，会自动压缩js
 };
