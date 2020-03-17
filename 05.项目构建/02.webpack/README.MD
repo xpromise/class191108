@@ -64,3 +64,27 @@
 - `xxx is not define`
   - 说明 xxx 没有定义
   - 定义或者引入
+
+## 指令
+
+- npm 和 npx 的区别
+
+  - npm 对包进行管理（下载、上传、删除..）
+  - npx 运行本地安装包的指令
+    - 当我们下载包时，有些包会将运行的脚本添加到 node_modules/.bin 目录中
+    - 运行 npx 时，会将 node_modules/.bin 临时添加为环境变量
+    - 所以 node_modules/.bin 下面 cmd 程序就可以当作指令运行
+
+- package.json
+
+```json
+// 启动项目的指令
+"scripts": {
+    // npm start
+    // 在scripts指令运行，会将node_modules/.bin临时添加为环境变量
+    "start": "webpack-dev-server --config ./config/webpack.dev.js",
+    // 除了start，其余指令都得加 run
+    // npm run build
+    "build": "webpack --config ./config/webpack.prod.js"
+  },
+```

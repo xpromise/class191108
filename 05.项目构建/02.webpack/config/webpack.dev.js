@@ -1,5 +1,7 @@
 /*
   webpack配置文件
+
+    开发环境指令：npx webpack-dev-server --config ./config/webpack.dev.js
 */
 const { resolve } = require("path");
 // 插件需要引入使用，而loader不需要引入
@@ -10,7 +12,7 @@ module.exports = {
   entry: "./src/js/index.js",
   // output
   output: {
-    path: resolve(__dirname, "build"), // 输出目录
+    path: resolve(__dirname, "../build"), // 输出目录
     filename: "build.js" // 输出文件名
   },
   // loader
@@ -98,7 +100,7 @@ module.exports = {
       2. webpack-dev-server是在内存中构建，没有输出。 webpack会有输出到build下面 
   */
   devServer: {
-    contentBase: resolve(__dirname, 'build'), // 运行（构建后）代码的根目录
+    contentBase: resolve(__dirname, '../build'), // 运行（构建后）代码的根目录
     compress: true, // 启动gzip压缩
     port: 3000, // 端口号
     host: 'localhost',
