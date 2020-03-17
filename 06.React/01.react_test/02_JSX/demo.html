@@ -1,11 +1,34 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>02_JSX_DEMO</title>
-</head>
-<body>
-  <h2>前端JS框架列表</h2>
-  <div id="example1"></div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>02_JSX_DEMO</title>
+  </head>
+  <body>
+    <h2>前端JS框架列表</h2>
+    <div id="example1"></div>
+    <script src="../js/react.development.js"></script>
+    <script src="../js/react-dom.development.js"></script>
+    <script src="../js/babel.min.js"></script>
+    <script type="text/babel">
+      const data = ["jQuery", "Bootstrap", "NodeJS", "Webpack", "React"];
+
+      const result = data.map((item, index) => {
+        // 在React中遍历的每一项元素需要一个唯一的key属性
+        return <li key={index}>{item}</li>;
+      });
+      /* const result = [
+        <li>jQuery</li>,
+        <li>Bootstrap</li>,
+        <li>NodeJS</li>,
+        <li>Webpack</li>,
+        <li>React</li>
+      ]; */
+
+      // JSX一旦接受到一个数组，会自动展开数组每一项值
+      const vDom = <ul>{result}</ul>;
+
+      ReactDOM.render(vDom, document.getElementById("example1"));
+    </script>
+  </body>
 </html>
