@@ -1,7 +1,5 @@
 /*
   webpack配置文件
-
-  
 */
 const { resolve } = require("path");
 // 插件需要引入使用，而loader不需要引入
@@ -38,7 +36,7 @@ module.exports = {
         ]
       },
       {
-        // 处理图片文件
+        // 处理图片文件(默认是不能处理html的图片，让html加载图片)
         test: /\.(png|jpg|gif)$/,
         // use: [
         //   {
@@ -59,8 +57,20 @@ module.exports = {
           limit: 11000,
           // [hash:10] hash值取10位
           // [ext] 原来文件扩展名是啥就是啥
-          name: "[hash:10].[ext]"
+          name: "[hash:10].[ext]",
+          // 关闭ES6模块化，使用Commonjs模块化
+          // 解决 html 中 img src 为 [object Module]
+          esModule: false, 
         }
+      },
+      {
+        test: /\.(html)$/,
+        loader: "html-loader"
+      },
+      {
+        // 排除文件
+        exclude: /\.(less|jpg|png|gif|js|html)$/,
+        loader: 'file-loader'
       }
     ]
   },
