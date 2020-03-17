@@ -67,6 +67,14 @@
 
 ## 指令
 
+- webpack 和 webpack-dev-server 的区别
+
+  - 只有 webpack-dev-server 才能启动 devServer 配置，而 webpack 不行
+  - webpack-dev-server 是在内存中构建，没有输出。 webpack 会有输出到 build 下面
+  - 简单理解：
+    - webpack 用于生产环境（会输出代码）
+    - webpack-dev-server 用于开发环境（不会输出代码）
+
 - npm 和 npx 的区别
 
   - npm 对包进行管理（下载、上传、删除..）
