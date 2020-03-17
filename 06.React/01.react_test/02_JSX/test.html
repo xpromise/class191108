@@ -1,11 +1,37 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>02_JSX</title>
-</head>
-<body>
-  <div id="test1"></div>
-  <div id="test2"></div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>02_JSX</title>
+  </head>
+  <body>
+    <div id="test1"></div>
+    <div id="test2"></div>
+    <script src="../js/react.development.js"></script>
+    <script src="../js/react-dom.development.js"></script>
+    <script>
+      /*
+      创建虚拟DOM对象两种语法
+        1. 普通js语法 （不需要babel）
+        2. jsx语法（需要babel编译）
+    */
+      // 创建虚拟DOM对象
+      const vDom1 = React.createElement(
+        "h1", // 元素类型
+        { id: "title1", className: "my-class-1" }, // 元素属性
+        "I Like You" // 元素里面的内容
+      );
+      // 将虚拟DOM对象渲染到页面上
+      ReactDOM.render(vDom1, document.getElementById('test1'));
+    </script>
+    <script src="../js/babel.min.js"></script>
+    <script type="text/babel">
+      // 创建虚拟DOM对象
+      const id = "title2";
+      const content = 'I Like You!!!';
+      const vDom2 = <h1 id={id} className="my-class-2">{content}</h1>;
+      // 将虚拟DOM对象渲染到页面上
+      ReactDOM.render(vDom2, document.getElementById('test2'));
+    </script>
+  </body>
 </html>
