@@ -16,30 +16,32 @@
     <script type="text/javascript" src="../js/babel.min.js"></script>
     <script type="text/babel">
       /*
-      组件化编码流程：
-        1. 拆分组件
-          按照页面js功能或变化拆分组件
-          默认情况下，最外面有一个App组件
-          App
-          Add
-          List
-        2. 实现静态组件
-          实现组件的基本结构和样式，不写功能
-        3. 实现动态组件（写功能）    
-          1. 要不要定义state？ 看用户界面有没有变化
-          2. state定义在哪个组件中？
-            如果只有单个组件使用，就定义在单个组件内部
-            如果有多个组件使用，就要状态提升，定义在其多个组件公共的父组件中
-          3. state取什么名字，值为什么类型？
-            值为什么类型 --> 用户界面变化有几种情况
-              情况是有限的，布尔值、number
-              情况是无限的，[]、{} 
-                一旦数据要进行遍历展示，用[]
-          4. state开发流程
-            先初始化状态
-            再读取状态使用
-            最后再写更新状态      
-    */
+        组件化编码流程：
+          1. 拆分组件
+            按照页面js功能或变化拆分组件
+            默认情况下，最外面有一个App组件
+            App
+            Add
+            List
+          2. 实现静态组件
+            实现组件的基本结构和样式，不写功能
+          3. 实现动态组件（写功能）
+            1. 要不要定义state？ 看用户界面有没有变化
+            2. state定义在哪个组件中？
+              如果只有单个组件使用，就定义在单个组件内部
+              如果有多个组件使用，就要状态提升，定义在其多个组件公共的父组件中
+            3. state取什么名字，值为什么类型？
+              值为什么类型 --> 用户界面变化有几种情况
+                情况是有限的，布尔值、number
+                情况是无限的，[]、{}
+                  一旦数据要进行遍历展示，用[]
+            4. state开发流程
+              先初始化状态
+              再读取状态使用
+              最后再写更新状态
+            5. 更新state的方法定义在哪？
+              state在哪里，更新state的方法就定义在哪
+      */
 
       class App extends React.Component {
         // 初始化状态
@@ -48,7 +50,27 @@
             { id: 1, content: "吃饭" },
             { id: 2, content: "睡觉" },
             { id: 3, content: "包郭德纲" }
-          ]
+          ],
+          // aaa: 111,
+          // bbb: 222
+        };
+
+        id = 4;
+
+        // 更新todos
+        updateTodos = todo => {
+          // 读取原来的数据
+          const { todos } = this.state;
+
+          // 一般不建议使用：修改原数据（将来不能做性能优化~）
+          // todos.unshift({ id: this.id++, content: todo });
+
+          // 更新state
+          // 一旦更新状态，就会重新渲染组件，从而更新用户界面的变化
+          this.setState({
+            // 建议不修改原数据
+            todos: [{ id: this.id++, content: todo }, ...todos]
+          });
         };
 
         render() {
@@ -58,7 +80,7 @@
           return (
             <div>
               <h1>Simple Todo List</h1>
-              <Add />
+              <Add updateTodos={this.updateTodos} />
               {/* 通过props方式（标签属性）传给List组件使用 */}
               <List todos={todos} />
             </div>
@@ -67,11 +89,31 @@
       }
 
       class Add extends React.Component {
+        static propTypes = {
+          updateTodos: PropTypes.func.isRequired
+        };
+
+        inputRef = React.createRef();
+
+        addTodo = () => {
+          // 获取DOM元素
+          const input = this.inputRef.current;
+          // 获取输入框的值
+          const value = input.value.trim();
+
+          if (value) {
+            // 添加todo
+            this.props.updateTodos(value);
+            // 清空输入框
+            input.value = "";
+          }
+        };
+
         render() {
           return (
             <div>
-              <input type="text" />
-              <button>Add #3</button>
+              <input type="text" ref={this.inputRef} />
+              <button onClick={this.addTodo}>Add #3</button>
             </div>
           );
         }
@@ -88,8 +130,8 @@
           const { todos } = this.props;
 
           /* const data = todos.map(todo => {
-            return <li key={todo.id}>{todo.content}</li>;
-          }); */
+              return <li key={todo.id}>{todo.content}</li>;
+            }); */
 
           return (
             <ul>
