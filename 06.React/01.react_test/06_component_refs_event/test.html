@@ -1,24 +1,75 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>07_component_refs</title>
-</head>
-<body>
-<br>
-  <div id="example"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>07_component_refs</title>
+  </head>
+  <body>
+    <br />
+    <div id="example"></div>
 
-  <script type="text/javascript" src="../js/react.development.js"></script>
-  <script type="text/javascript" src="../js/react-dom.development.js"></script>
-  <script type="text/javascript" src="../js/babel.min.js"></script>
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script
+      type="text/javascript"
+      src="../js/react-dom.development.js"
+    ></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
 
-  <script type="text/babel">
-    /*
+    <script type="text/babel">
+      /*
     需求: 自定义组件, 功能说明如下:
       1. 界面如果页面所示
       2. 点击按钮, 提示第一个输入框中的值
       3. 当第2个输入框失去焦点时, 提示这个输入框中的值
    */
-  </script>
-</body>
+
+      class Form extends React.Component {
+        /*  constructor() {
+          super();
+
+          this.createRef = React.createRef();
+          console.log(this.createRef);
+        } */
+        createRef = React.createRef();
+
+        handleClick = () => {
+          // 获取输入框的值
+          // console.log(this.refs.stringRef.value);
+          // console.log(this.funcRef.value);
+          const input = this.createRef.current;
+          const value = input.value;
+          console.log(value);
+          // 清空输入框的值
+          input.value = "";
+        };
+
+        handleBlur = event => {
+          /*
+            什么时候ref: 如果要操作DOM元素不是触发事件的目标元素，就用ref
+            什么时候event.target: 如果要操作DOM元素是触发事件的目标元素，就用event.target
+          */
+          console.log(event.target.value);
+        };
+
+        render() {
+          return (
+            <div>
+              {/* <input type="text" ref="stringRef" /> */}
+              {/*<input type="text" ref={input => (this.funcRef = input)} />*/}
+              <input type="text" ref={this.createRef} />
+
+              <button onClick={this.handleClick}>点击按钮提示数据</button>
+              <input
+                type="text"
+                placeholder="失去焦点提示数据"
+                onBlur={this.handleBlur}
+              />
+            </div>
+          );
+        }
+      }
+
+      ReactDOM.render(<Form />, document.getElementById("example"));
+    </script>
+  </body>
 </html>
