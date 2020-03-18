@@ -1,19 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>03_component_basic</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>03_component_basic</title>
+  </head>
+  <body>
+    <div id="example1"></div>
+    <div id="example2"></div>
 
-  <div id="example1"></div>
-  <div id="example2"></div>
-
-  <script type="text/javascript" src="../js/react.development.js"></script>
-  <script type="text/javascript" src="../js/react-dom.development.js"></script>
-  <script type="text/javascript" src="../js/babel.min.js"></script>
-
-  <script type="text/babel">
-  </script>
-</body>
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script
+      type="text/javascript"
+      src="../js/react-dom.development.js"
+    ></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <script type="text/babel">
+      // 工厂函数组件（简单组件）
+      function MyComponent1() {
+        console.log(this); // undefined
+        // return <h1>工厂函数组件（简单组件）</h1>;
+        return (
+          <div>
+            <ul>
+              <li>111</li>
+              <li>222</li>
+              <li>333</li>
+            </ul>
+            <img src="" alt="" />
+            <p>111</p>
+          </div>
+        );
+      }
+      /*
+        1)组件名必须首字母大写
+        2)虚拟DOM元素只能有一个根元素
+        3)虚拟DOM元素必须有结束标签
+            单标签带自结束符: 如果标签内部没有子元素，就用单标签
+            双标签：如果标签内部有子元素，就用双标签
+      */
+      ReactDOM.render(<MyComponent1 />, document.getElementById("example1"));
+      // ES6类组件(复杂组件)
+      class MyComponent2 extends React.Component {
+        render() {
+          console.log(this); // 组件实例对象
+          return <h1>ES6类组件(复杂组件)</h1>;
+        }
+      }
+      ReactDOM.render(<MyComponent2 />, document.getElementById("example2"));
+    </script>
+  </body>
 </html>
