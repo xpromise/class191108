@@ -1,24 +1,123 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>07_component_state</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>07_component_state</title>
+  </head>
+  <body>
+    <div id="example"></div>
 
-<div id="example"></div>
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script
+      type="text/javascript"
+      src="../js/react-dom.development.js"
+    ></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
 
-<script type="text/javascript" src="../js/react.development.js"></script>
-<script type="text/javascript" src="../js/react-dom.development.js"></script>
-<script type="text/javascript" src="../js/babel.min.js"></script>
-
-<script type="text/babel">
-  /*
+    <script type="text/babel">
+      /*
   需求: 自定义组件, 功能说明如下
     1. 显示h2标题, 初始文本为: 你喜欢我
     2. 点击标题更新为: 我喜欢你
   */
-</script>
-</body>
-</html>
 
+      /*
+        一旦用户界面发生变化，就用通过控制state来控制它的变化
+        state开发流程：
+          1. 初始化state
+          2. 读取使用state
+          3. 更新state
+      */
+
+      // 定义ES6类组件
+      class Like1 extends React.Component {
+        constructor() {
+          // 使用了extends 必须调用super
+          super();
+          // 1. 初始化state
+          this.state = {
+            isLikeMe: false
+          };
+          // 修改函数this指向（因为constructor是第一个执行，只会执行一次）
+          // bind方法不会修改原函数，会返回一个新函数，新函数的this才发生变化
+          this.handleClick = this.handleClick.bind(this);
+        }
+
+        /*
+          Like.prototype.handleClick = fn
+          const like = new Like();
+          // handleClick是实例对象的直接属性? 还是原型上的属性？
+          like.__proto__.handleClick
+          读取属性看原型链，设置属性不看
+        */
+        handleClick() {
+          /*
+            错误：Uncaught TypeError: Cannot read property 'setState' of undefined
+            分析错误原因：
+              aaa.bbb --> Cannot read property 'bbb' of undefined
+                原因是因为aaa是undefined
+
+              this是undefined
+
+            注意：
+              在普通ES6类中，this指向实例对象
+              但是在React中，ES6类组件，除了 constructor/render 等函数以外，其他函数的this都是undefined
+          
+            解决：修改函数this指向
+          */
+          // console.log(this); // undefined
+          // 读取之前的state
+          const { isLikeMe } = this.state;
+          // 3. 更新状态
+          this.setState({
+            isLikeMe: !isLikeMe
+          });
+        }
+
+        render() {
+          // 2. 读取使用state
+          const { isLikeMe } = this.state;
+          // 根据状态值来决定显示的内容
+          // return <h1 onClick={() => {}}>{isLikeMe ? "你喜欢我" : "我喜欢你"}</h1>;
+          return (
+            <h1 onClick={this.handleClick}>
+              {isLikeMe ? "你喜欢我" : "我喜欢你"}
+            </h1>
+          );
+        }
+      }
+
+      class Like extends React.Component {
+        // 1. 初始化state
+        state = {
+          isLikeMe: false
+        };
+
+        // 修改为箭头函数，此时this指向就是组件实例对象了
+        handleClick = () => {
+          // 读取之前的state
+          const { isLikeMe } = this.state;
+          // 3. 更新状态
+          this.setState({
+            isLikeMe: !isLikeMe
+          });
+        };
+
+        render() {
+          // 2. 读取使用state
+          const { isLikeMe } = this.state;
+          // 根据状态值来决定显示的内容
+          // return <h1 onClick={() => {}}>{isLikeMe ? "你喜欢我" : "我喜欢你"}</h1>;
+          return (
+            <h1 onClick={this.handleClick}>
+              {isLikeMe ? "你喜欢我" : "我喜欢你"}
+            </h1>
+          );
+        }
+      }
+
+      // 将组件渲染到页面指定容器中
+      ReactDOM.render(<Like />, document.getElementById("example"));
+    </script>
+  </body>
+</html>
