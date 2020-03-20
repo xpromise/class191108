@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>10_ComponentLife</title>
+  </head>
+  <body>
+    <div id="example"></div>
+
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script
+      type="text/javascript"
+      src="../js/react-dom.development.js"
+    ></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <script type="text/babel">
+      /*
+      生命周期函数：
+        1. 初始化阶段（诞生）
+          constructor
+            过去：
+              修改函数this指向 this.xxx = this.xxx.bind(this)
+              初始化state this.state = {}
+              初始化ref this.xxxRef = React.createRef()
+            现在，一般都会简写了~
+            所以constructor一般不会使用  
+          componentWillMount 组件将要挂载
+            组件将要渲染到页面上去
+          **render 渲染
+            生成组件要渲染的虚拟DOM对象（注意：此时组件并没有渲染）
+            在render之后，componentDidMount之前，组件渲染完毕，此后才能操作DOM。
+          **componentDidMount 组件已经挂载
+            在组件中只会触发一次。
+            1. 发送ajax请求
+            2. 设置定时器
+            3. 绑定原生DOM事件...
+
+          面试题：
+            *** 请求为了在componentDidMount发送，而不是componentWillMount？
+              1. componentDidMount只会执行一次，而componentWillMount可能会执行多次
+              2. componentDidMount可以操作DOM
+              3. componentDidMount在render之后触发的，不影响前面渲染页面的速度
+              总结：如果请求只要发送一次，就在 componentDidMount 中发
+                    如果请求可能要发送多次，就不在 componentDidMount，具体情况具体分析
+      
+        2. 更新阶段
+          1. 父组件重新渲染渲染默认一定会导致子组件重新渲染，子组件就会走更新流程
+            componentWillReceiveProps 
+              组件将要接受父组件传递props
+            **shouldComponentUpdate
+              用来对组件进行性能优化（优化重新渲染的次数）
+              返回值true 会重新渲染
+              返回值false 不会重新渲染
+            componentWillUpdate
+              组件将要更新(还没有更新)
+            render
+            componentDidUpdate
+              组件已经更新（获取到最新的DOM元素）
+          2. 子组件内部调用this.setState导致子组件更新
+            shouldComponentUpdate
+            componentWillUpdate
+            render
+            componentDidUpdate
+          3. 子组件内部调用this.forceUpdate导致子组件强制更新
+            componentWillUpdate
+            render
+            componentDidUpdate
+        3. 卸载阶段（死亡）
+            **componentWillUnmount 组件将要卸载
+              1. 清除定时器
+              2. 取消ajax请求
+              3. 解绑事件
+                等收尾工作~（消除内存泄漏的隐患）
+            
+            如何卸载组件？
+              ReactDOM.unmountComponentAtNode(contanier)
+   */
+
+      class LifeCircle extends React.Component {
+        constructor() {
+          super();
+          console.log("constructor()");
+        }
+
+        componentWillMount() {
+          console.log("componentWillMount()");
+        }
+
+        componentDidMount() {
+          console.log("componentDidMount()");
+        }
+
+        componentWillReceiveProps() {
+          console.log("componentWillReceiveProps()");
+        }
+
+        shouldComponentUpdate() {
+          console.log("shouldComponentUpdate()");
+          return true;
+          // return false;
+        }
+
+        componentWillUpdate() {
+          console.log("componentWillUpdate()");
+        }
+
+        componentDidUpdate() {
+          console.log("componentDidUpdate()");
+        }
+
+        componentWillUnmount() {
+          console.log("componentWillUnmount()");
+        }
+
+        handleClick = () => {
+          // this.setState({});
+          // this.forceUpdate(() => {}); // 基本不用
+          ReactDOM.unmountComponentAtNode(document.getElementById("example"));
+        };
+
+        render() {
+          console.log("render()");
+          return <h1 onClick={this.handleClick}>LifeCircle</h1>;
+        }
+      }
+
+      ReactDOM.render(<LifeCircle />, document.getElementById("example"));
+    </script>
+  </body>
+</html>
