@@ -1,22 +1,142 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>09_form</title>
-</head>
-<body>
-<div id="example"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>09_form</title>
+  </head>
+  <body>
+    <div id="example"></div>
 
-<script type="text/javascript" src="../js/react.development.js"></script>
-<script type="text/javascript" src="../js/react-dom.development.js"></script>
-<script type="text/javascript" src="../js/babel.min.js"></script>
-<script type="text/babel">
-  /*
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script
+      type="text/javascript"
+      src="../js/react-dom.development.js"
+    ></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <script type="text/babel">
+      /*
   需求: 自定义包含表单的组件
     1. 界面如下所示
     2. 输入用户名密码后, 点击登陆提示输入信息
     3. 不提交表单
   */
-</script>
-</body>
+
+      class Form1 extends React.Component {
+        usernameRef = React.createRef();
+        passwordRef = React.createRef();
+
+        // 在实例对象的原型上
+        a() {}
+        // 在实例对象直接属性
+        b = function() {};
+        c = () => {};
+
+        login = e => {
+          // 禁止表单的默认行为
+          e.preventDefault();
+          // 收集表单数据
+          const username = this.usernameRef.current.value.trim();
+          const password = this.passwordRef.current.value.trim();
+          // 发送ajax请求
+          console.log(`用户名：${username}  密码：${password}`);
+        };
+
+        render() {
+          // console.log(this);
+
+          return (
+            <form action="" onSubmit={this.login}>
+              用户名: <input type="text" ref={this.usernameRef} />
+              密码: <input type="password" ref={this.passwordRef} />
+              <button type="submit">登陆</button>
+            </form>
+          );
+        }
+      }
+
+      // 受控组件：通过state和onChange事件自动收集表单数据
+      class Form extends React.Component {
+        state = {
+          username: "",
+          password: ""
+        };
+
+        login = e => {
+          // 禁止表单的默认行为
+          e.preventDefault();
+          // 收集表单数据
+          const { username, password } = this.state;
+          // 发送ajax请求
+          console.log(`用户名：${username}  密码：${password}`);
+          // 清空表单的值
+          this.setState({
+            username: "",
+            password: ""
+          });
+        };
+
+        handleUsernameChange = e => {
+          // 获取输入框的值
+          const value = e.target.value.trim();
+          // 更新成state
+          this.setState({
+            username: value
+          });
+        };
+
+        handlePasswordChange = e => {
+          // 获取输入框的值
+          const value = e.target.value.trim();
+          // 更新成state
+          this.setState({
+            password: value
+          });
+        };
+
+        /*
+          高阶函数：
+            1. 执行函数返回值是一个函数
+            2. 执行函数传入的参数是函数
+       */
+        handleChange = name => {
+          // 内部函数才是onChange事件的回调函数
+          return e => {
+            // 获取输入框的值
+            const value = e.target.value.trim();
+            // 更新成state
+            this.setState({
+              [name]: value
+            });
+          };
+        };
+
+        render() {
+          // console.log(this);
+          const { username, password } = this.state;
+          // console.log(username, password);
+
+          return (
+            <form action="" onSubmit={this.login}>
+              {/* onChange: 当input的value发生变化触发~ */}
+              用户名:
+              <input
+                type="text"
+                onChange={this.handleChange('username')}
+                value={username}
+              />
+              密码:
+              <input
+                type="password"
+                onChange={this.handleChange('password')}
+                value={password}
+              />
+              <button type="submit">登陆</button>
+            </form>
+          );
+        }
+      }
+
+      ReactDOM.render(<Form />, document.getElementById("example"));
+    </script>
+  </body>
 </html>
