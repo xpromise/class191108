@@ -80,7 +80,7 @@
           return (
             <div>
               <h1>Simple Todo List</h1>
-              <Add updateTodos={this.updateTodos} />
+              <Add updateTodos={this.updateTodos} length={todos.length} />
               {/* 通过props方式（标签属性）传给List组件使用 */}
               <List todos={todos} />
             </div>
@@ -90,7 +90,8 @@
 
       class Add extends React.Component {
         static propTypes = {
-          updateTodos: PropTypes.func.isRequired
+          updateTodos: PropTypes.func.isRequired,
+          length: PropTypes.number.isRequired
         };
 
         inputRef = React.createRef();
@@ -110,10 +111,11 @@
         };
 
         render() {
+          const { length } = this.props;
           return (
             <div>
               <input type="text" ref={this.inputRef} />
-              <button onClick={this.addTodo}>Add #3</button>
+              <button onClick={this.addTodo}>Add #{length}</button>
             </div>
           );
         }
