@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>10_ComponentLife</title>
+  </head>
+  <body>
+    <div id="example"></div>
+
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script
+      type="text/javascript"
+      src="../js/react-dom.development.js"
+    ></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <script type="text/babel">
+      /*
+      生命周期函数：
+        1. 初始化阶段（诞生）
+          constructor
+          **static getDerivedStateFromProps
+            根据属性来生成新状态
+              如果你的state和传入props相关，才会用
+              如果你的state和传入props无关，就不用
+          render
+          componentDidMount
+
+        2. 更新阶段
+          1. 父组件重新渲染渲染默认一定会导致子组件重新渲染，子组件就会走更新流程 
+            **static getDerivedStateFromProps
+            shouldComponentUpdate
+            render
+            getSnapshotBeforeUpdate
+              在更新之前操作DOM
+            componentDidUpdate
+          2. 子组件内部调用this.setState导致子组件更新
+            static getDerivedStateFromProps
+            shouldComponentUpdate
+            render
+            getSnapshotBeforeUpdate
+            componentDidUpdate
+          3. 子组件内部调用this.forceUpdate导致子组件强制更新
+            static getDerivedStateFromProps
+            render
+            getSnapshotBeforeUpdate
+            componentDidUpdate
+        3. 卸载阶段（死亡）
+            componentWillUnmount
+
+
+        新的生命周期函数删除了三个旧函数：
+          componentWillMount
+          componentWillReceiveProps
+          componentWillUpdate
+
+          componentWillMount和componentWillReceiveProps被 static getDerivedStateFromProps 取代了
+          而 componentWillUpdate 彻底删除了，没啥用
+       
+        重要：
+          componentDidMount
+          shouldComponentUpdate
+          componentWillUnmount
+          render
+          static getDerivedStateFromProps
+   */
+
+      class LifeCircle extends React.Component {
+        constructor() {
+          super();
+          console.log("constructor()");
+          this.state = {
+            flag: true
+          };
+        }
+
+        static getDerivedStateFromProps() {
+          console.log("getDerivedStateFromProps()");
+          // 返回新状态
+          return {
+            flag: false
+          };
+        }
+
+        componentDidMount() {
+          console.log("componentDidMount()");
+        }
+
+        getSnapshotBeforeUpdate() {
+          console.log("getSnapshotBeforeUpdate()");
+          return null;
+        }
+
+        shouldComponentUpdate() {
+          console.log("shouldComponentUpdate()");
+          return true;
+        }
+
+        componentDidUpdate() {
+          console.log("componentDidUpdate()");
+        }
+
+        handleClick = () => {
+          this.setState({});
+          // this.forceUpdate(() => {}); // 基本不用
+          // ReactDOM.unmountComponentAtNode(document.getElementById("example"));
+        };
+
+        render() {
+          console.log("render()");
+          return <h1 onClick={this.handleClick}>LifeCircle</h1>;
+        }
+      }
+
+      ReactDOM.render(<LifeCircle />, document.getElementById("example"));
+    </script>
+  </body>
+</html>

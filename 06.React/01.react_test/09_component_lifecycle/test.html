@@ -20,6 +20,47 @@
         2. 切换时间为2S
         3. 点击按钮从界面中移除组件界面
    */
+      const container = document.getElementById("example");
+
+      class LifeCircle extends React.Component {
+        state = {
+          opacity: 1
+        };
+
+        componentDidMount() {
+          this.timeId = setInterval(() => {
+            let { opacity } = this.state;
+            opacity -= 0.02;
+            if (opacity <= 0) opacity = 1;
+            this.setState({
+              opacity
+            });
+          }, 60);
+        }
+
+        goDie = () => {
+          ReactDOM.unmountComponentAtNode(container);
+        };
+
+        componentWillUnmount() {
+          // 清除定时器
+          clearInterval(this.timeId);
+        }
+
+        render() {
+          const { opacity } = this.state;
+
+          return (
+            <div>
+              {/* 第一个{}代表里面是js代码  第二个{}代表是对象(用来对象简写) */}
+              <h1 style={{ opacity }}>React学不会咋整？</h1>
+              <button onClick={this.goDie}>不活了</button>
+            </div>
+          );
+        }
+      }
+
+      ReactDOM.render(<LifeCircle />, container);
     </script>
   </body>
 </html>
