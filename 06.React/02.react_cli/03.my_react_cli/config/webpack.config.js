@@ -3,6 +3,7 @@
 */
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const paths = require("./paths");
 
 module.exports = function(webpackEnv) {
@@ -64,23 +65,23 @@ module.exports = function(webpackEnv) {
           来自于多个入口文件就是多个chunk
           chunkFilename负责给chunk取名字
       */
-      chunkFilename: isEnvProduction
-        ? "static/js/[name].[contenthash:8].chunk.js"
-        : isEnvDevelopment && "static/js/[name].chunk.js",
+      // chunkFilename: isEnvProduction
+      //   ? "static/js/[name].[contenthash:8].chunk.js"
+      //   : isEnvDevelopment && "static/js/[name].chunk.js",
       // 所有资源引入路径公共路径
-      publicPath: "/",
+      publicPath: "/"
       /*
         devtool相关
       */
-      devtoolModuleFilenameTemplate: isEnvProduction
-        ? info =>
-            path
-              .relative(paths.appSrc, info.absoluteResourcePath)
-              .replace(/\\/g, "/")
-        : isEnvDevelopment &&
-          (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, "/")),
-      jsonpFunction: `webpackJsonp${appPackageJson.name}`,
-      globalObject: "this"
+      // devtoolModuleFilenameTemplate: isEnvProduction
+      //   ? info =>
+      //       path
+      //         .relative(paths.appSrc, info.absoluteResourcePath)
+      //         .replace(/\\/g, "/")
+      //   : isEnvDevelopment &&
+      //     (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, "/")),
+      // jsonpFunction: `webpackJsonp${appPackageJson.name}`,
+      // globalObject: "this"
     },
     // loader
     module: {
@@ -110,6 +111,28 @@ module.exports = function(webpackEnv) {
           // 专门用来处理css文件
           test: /\.css$/,
           use: getStyleLoader()
+        },
+        {
+          test: /\.(png|jpe?g|gif|webp)$/,
+          use: [
+            {
+              loader: "url-loader",
+              options: {
+                limit: 10000,
+                name: "static/media/[name].[hash:10].[ext]"
+              }
+            }
+          ]
+        },
+        // 之前加上 html-loader 处理html中的图片
+        // 但是，现在开发的react项目，项目中index.html中不会写任何东西（div#root）
+        // 所以，不需要引入 html-loader 来处理html中的图片
+        {
+          exclude: /\.(html|css|less|png|jpe?g|gif|webp|js|jsx)/,
+          loader: "file-loader", // 处理其他资源~
+          options: {
+            name: "static/media/[name].[hash:10].[ext]"
+          }
         }
       ]
     },
@@ -121,7 +144,33 @@ module.exports = function(webpackEnv) {
           // 提取css成单独文件
           filename: "static/css/[name].[hash:10].css"
         }),
-      isEnvProduction && new OptimizeCSSAssetsPlugin() // 压缩css
+      isEnvProduction && new OptimizeCSSAssetsPlugin(), // 压缩css
+      new HtmlWebpackPlugin(
+        Object.assign(
+          // 浅拷贝
+          {},
+          {
+            template: paths.appHtml
+          },
+          isEnvProduction
+            ? {
+                // https://github.com/kangax/html-minifier#options-quick-reference
+                minify: {
+                  removeComments: true,
+                  collapseWhitespace: true,
+                  removeRedundantAttributes: true,
+                  useShortDoctype: true,
+                  removeEmptyAttributes: true,
+                  removeStyleLinkTypeAttributes: true,
+                  keepClosingSlash: true,
+                  minifyJS: true,
+                  minifyCSS: true,
+                  minifyURLs: true
+                }
+              }
+            : {}
+        )
+      )
     ].filter(Boolean) // 过滤false的值
   };
 };
