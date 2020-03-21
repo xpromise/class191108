@@ -1,13 +1,39 @@
 /*
   webpack的核心配置文件
 */
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const paths = require("./paths");
 
 module.exports = function(webpackEnv) {
   // 定义识别开发/生产环境的变量
   const isEnvDevelopment = webpackEnv === "development";
   const isEnvProduction = webpackEnv === "production";
-  
+
+  // 处理样式loader
+  const getStyleLoader = function(hasExtractLoader) {
+    // css 和 less公共部分
+    const loaders = [
+      isEnvProduction && {
+        loader: MiniCssExtractPlugin.loader // 生产环境，提取CSS成单独文件
+      },
+      isEnvDevelopment && {
+        loader: "style-loader" // 开发环境，创建style标签插入到页面中
+      },
+      {
+        loader: "css-loader"
+      }
+    ].filter(Boolean);
+
+    if (hasExtractLoader) {
+      loaders.push({
+        loader: hasExtractLoader
+      });
+    }
+
+    return loaders;
+  };
+
   // 对象中写webpack核心配置
   return {
     // 模式
@@ -57,8 +83,45 @@ module.exports = function(webpackEnv) {
       globalObject: "this"
     },
     // loader
-    module: { rules: [] },
+    module: {
+      rules: [
+        {
+          // npm install -D babel-loader @babel/core @babel/preset-env @babel/preset-react
+          // babel-loader 用来将jsx语法编译成js语法
+          test: /\.(js|jsx)$/,
+          exclude: /(node_modules)/, // 排除
+          use: {
+            loader: "babel-loader",
+            options: {
+              presets: [
+                // 指示babel做啥事
+                "@babel/preset-env", // 只能处理普通的js语法，不能处理jsx
+                "@babel/preset-react" // 专门用来处理react jsx语法
+              ]
+            }
+          }
+        },
+        {
+          // npm i less less-loader style-loader css-loader -D
+          test: /\.less$/,
+          use: getStyleLoader("less-loader")
+        },
+        {
+          // 专门用来处理css文件
+          test: /\.css$/,
+          use: getStyleLoader()
+        }
+      ]
+    },
     // plugins
-    plugins: []
+    plugins: [
+      // 只有生产环境使用
+      isEnvProduction &&
+        new MiniCssExtractPlugin({
+          // 提取css成单独文件
+          filename: "static/css/[name].[hash:10].css"
+        }),
+      isEnvProduction && new OptimizeCSSAssetsPlugin() // 压缩css
+    ].filter(Boolean) // 过滤false的值
   };
 };
