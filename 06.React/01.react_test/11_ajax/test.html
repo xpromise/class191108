@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>11_ajax</title>
-</head>
-<body>
-<div id="example"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>11_ajax</title>
+  </head>
+  <body>
+    <div id="example"></div>
 
-<script type="text/javascript" src="../js/react.development.js"></script>
-<script type="text/javascript" src="../js/react-dom.development.js"></script>
-<script type="text/javascript" src="../js/babel.min.js"></script>
-<script type="text/babel">
-  /*
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script
+      type="text/javascript"
+      src="../js/react-dom.development.js"
+    ></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.2/axios.min.js"></script>
+    <script type="text/babel">
+      /*
   需求:
     1. 界面效果如下
     2. 根据指定的关键字在github上搜索匹配的最受关注的库
@@ -19,9 +23,86 @@
     4. 测试接口: https://api.github.com/search/repositories?q=r&sort=stars
   */
 
-</script>
-</body>
+      class Repo extends React.Component {
+        state = {
+          isLoading: false,
+          repo: {
+            name: "",
+            url: ""
+          }
+        };
+
+        componentDidMount() {
+          // 1. 一上来就要发送请求（初始化） 2. 只发送一次
+          // 发送请求时loading状态
+          this.setState({
+            isLoading: true
+          });
+
+          /* axios({
+            method: "GET",
+            url: "https://api.github.com/search/repositories?q=r&sort=stars"
+          })
+            .then(response => {
+              const { name, html_url } = response.data.items[0];
+              console.log(name, html_url);
+              // 请求成功/失败时 不是loading状态
+              this.setState({
+                isLoading: false,
+                repo: {
+                  name,
+                  url: html_url
+                }
+              });
+            })
+            .catch(error => {
+              console.log(error);
+              // 请求成功/失败时 不是loading状态
+              this.setState({
+                isLoading: false
+              });
+            }); */
+
+          fetch("https://api.github.com/search/repositories?q=r&sort=stars")
+            .then(response => response.json()) // 手动转换json数据
+            .then(response => {
+              console.log(response);
+              const { name, html_url } = response.items[0];
+              console.log(name, html_url);
+              // 请求成功/失败时 不是loading状态
+              this.setState({
+                isLoading: false,
+                repo: {
+                  name,
+                  url: html_url
+                }
+              });
+            })
+            .catch(err => {
+              console.log(err);
+              this.setState({
+                isLoading: false
+              });
+            });
+        }
+
+        render() {
+          const { isLoading, repo } = this.state;
+          return (
+            <h1>
+              {isLoading ? (
+                "loading..."
+              ) : (
+                <span>
+                  most star repo is <a href={repo.url}>{repo.name}</a>
+                </span>
+              )}
+            </h1>
+          );
+        }
+      }
+
+      ReactDOM.render(<Repo />, document.getElementById("example"));
+    </script>
+  </body>
 </html>
-
-
-
