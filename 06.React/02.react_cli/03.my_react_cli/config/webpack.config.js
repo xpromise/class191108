@@ -1,5 +1,8 @@
 /*
   webpack的核心配置文件
+
+  npm i -D webpack webpack-dev-server babel-loader @babel/core @babel/preset-env @babel/preset-react less less-loader style-loader css-loader mini-css-extract-plugin optimize-css-assets-webpack-plugin url-loader file-loader html-webpack-plugin
+  npm i react react-dom
 */
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
@@ -171,6 +174,9 @@ module.exports = function(webpackEnv) {
             : {}
         )
       )
-    ].filter(Boolean) // 过滤false的值
+    ].filter(Boolean), // 过滤false的值
+    resolve: {
+      extensions: [".js", ".jsx", ".json"] // 引入文件扩展名可以省略不写
+    }
   };
 };
