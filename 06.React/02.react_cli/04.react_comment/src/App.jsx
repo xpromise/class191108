@@ -24,7 +24,6 @@ import List from "./components/List";
         { id: 1, name: '培华', comment: '我的13岁小女盆友呢？' }
       ]
     4. 实现state动态展示（将App组件的state交给Item组件进行展示~）
-    
 */
 class App extends Component {
   // 初始化状态
@@ -33,6 +32,22 @@ class App extends Component {
       { id: 1, name: "培华", comment: "我的13岁小女盆友呢？" },
       { id: 2, name: "张天禹", comment: "头顶有点凉快~" }
     ]
+  };
+
+  // 初始化id
+  id = 3;
+
+  // 更新state的方法：添加评论
+  add = (name, comment) => {
+    const { comments } = this.state;
+
+    this.setState({
+      // 不要修改原数据
+      comments: [
+        { name, comment, id: this.id++ }, // 添加新的数据
+        ...comments // 展开之前state
+      ]
+    });
   };
 
   render() {
@@ -50,7 +65,7 @@ class App extends Component {
           </div>
         </header>
         <div className="container">
-          <Add />
+          <Add add={this.add} />
           {/* 以props方式传递comments数据 */}
           <List comments={comments} />
         </div>
