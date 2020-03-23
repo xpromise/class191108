@@ -1,20 +1,107 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import axios from "axios";
+
+/*
+  接口文档：https://developer.github.com/v3/search/#search-users
+  接口url：https://api.github.com/search/users?q=xpro
+*/
 
 export default class List extends Component {
+  static propTypes = {
+    searchName: PropTypes.string.isRequired
+  };
+
+  state = {
+    isFirstView: true, // 是否是初始化渲染
+    isLoading: false, // 是否是请求中
+    users: [], // 请求成功的数据
+    error: "" // 请求失败的错误
+  };
+
+  /*
+    父组件重新渲染导致子组件重新渲染
+  */
+  componentWillReceiveProps(nextProps) {
+    // 组件将要接受到属性。意思是还没有接受，所以组件this.props还是上一次的值
+    // 怎么获取最新的props呢？最新的值作为参数传入了~
+    const { searchName } = nextProps;
+    /*
+      组件四种变化：
+        1. 初始化渲染 -- Enter Name To Search
+        2. 发送请求中 -- loading
+        3. 请求成功 -- 用户数据
+        4. 请求失败 -- 错误提示
+    */
+    // 发送请求之前，切换成loading
+    this.setState({
+      isFirstView: false,
+      isLoading: true
+    });
+    // 发送请求
+    axios({
+      method: "GET",
+      url: "https://api.github.com/search/users",
+      params: {
+        q: searchName
+      }
+    })
+      .then(response => {
+        // 请求成功
+        this.setState({
+          users: response.data.items.map(user => {
+            return {
+              name: user.login, // 名字
+              avatar: user.avatar_url.replace(/s[0-9]/g, "s"), // 头像
+              url: user.html_url, // 仓库地址
+              id: user.id
+            };
+          }),
+          isLoading: false
+        });
+      })
+      .catch(error => {
+        // 请求失败
+        this.setState({
+          error: "网络出现故障",
+          users: [],
+          isLoading: false
+        });
+      });
+  }
+
   render() {
-    return (
-      <div className="row">
-        <div className="card">
-          <a href="https://github.com/aa" target="_blank">
-            <img
-              src="https://avatars1.githubusercontent.com/u/28438?v=4"
-              // style样式中px单位可以省略不写
-              style={{ width: 100 }}
-            />
-          </a>
-          <p className="card-text">aa</p>
+    const { isFirstView, isLoading, users, error } = this.state;
+
+    if (isFirstView) {
+      return <h1>Enter Name To Search</h1>;
+    }
+
+    if (isLoading) {
+      return <h1>Loading....</h1>;
+    }
+
+    if (users.length) {
+      return (
+        <div className="row">
+          {users.map(user => {
+            return (
+              <div className="card" key={user.id}>
+                <a href={user.url} target="_blank">
+                  <img
+                    src={user.avatar}
+                    // style样式中px单位可以省略不写
+                    style={{ width: 100 }}
+                  />
+                </a>
+                <p className="card-text">{user.name}</p>
+              </div>
+            );
+          })}
         </div>
-      </div>
-    );
+      );
+    }
+
+    return <h1>{error}</h1>;
   }
 }

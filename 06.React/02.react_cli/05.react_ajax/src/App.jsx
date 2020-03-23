@@ -5,14 +5,21 @@ import List from "./components/List";
 
 export default class App extends Component {
   state = {
-    searchName: ''
-  }
+    searchName: ""
+  };
+
+  updateSearchName = searchName => {
+    this.setState({
+      searchName
+    });
+  };
 
   render() {
+    const { searchName } = this.state;
     return (
       <div className="container">
-        <Search />
-        <List />
+        <Search updateSearchName={this.updateSearchName} />
+        <List searchName={searchName}/>
       </div>
     );
   }
