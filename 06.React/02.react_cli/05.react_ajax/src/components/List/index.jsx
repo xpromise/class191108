@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import axios from "axios";
+import PubSub from "pubsub-js";
 
 /*
   接口文档：https://developer.github.com/v3/search/#search-users
@@ -8,10 +8,6 @@ import axios from "axios";
 */
 
 export default class List extends Component {
-  static propTypes = {
-    searchName: PropTypes.string.isRequired
-  };
-
   state = {
     isFirstView: true, // 是否是初始化渲染
     isLoading: false, // 是否是请求中
@@ -19,55 +15,48 @@ export default class List extends Component {
     error: "" // 请求失败的错误
   };
 
-  /*
-    父组件重新渲染导致子组件重新渲染
-  */
-  componentWillReceiveProps(nextProps) {
-    // 组件将要接受到属性。意思是还没有接受，所以组件this.props还是上一次的值
-    // 怎么获取最新的props呢？最新的值作为参数传入了~
-    const { searchName } = nextProps;
-    /*
-      组件四种变化：
-        1. 初始化渲染 -- Enter Name To Search
-        2. 发送请求中 -- loading
-        3. 请求成功 -- 用户数据
-        4. 请求失败 -- 错误提示
-    */
-    // 发送请求之前，切换成loading
-    this.setState({
-      isFirstView: false,
-      isLoading: true
-    });
-    // 发送请求
-    axios({
-      method: "GET",
-      url: "https://api.github.com/search/users",
-      params: {
-        q: searchName
-      }
-    })
-      .then(response => {
-        // 请求成功
-        this.setState({
-          users: response.data.items.map(user => {
-            return {
-              name: user.login, // 名字
-              avatar: user.avatar_url.replace(/s[0-9]/g, "s"), // 头像
-              url: user.html_url, // 仓库地址
-              id: user.id
-            };
-          }),
-          isLoading: false
-        });
-      })
-      .catch(error => {
-        // 请求失败
-        this.setState({
-          error: "网络出现故障",
-          users: [],
-          isLoading: false
-        });
+  componentDidMount() {
+    // 订阅消息(只能订阅一次)
+    // 接受数据的是订阅，发布数据是发布
+    // state定义在哪？哪个组件需要数据进行展示，就定义在哪
+    PubSub.subscribe("SEARCH_NAME", (msg, searchName) => {
+      // 一旦发布消息，就会触发订阅消息的回调函数
+      // 发送请求之前，切换成loading
+      this.setState({
+        isFirstView: false,
+        isLoading: true
       });
+      // 发送请求
+      axios({
+        method: "GET",
+        url: "https://api.github.com/search/users",
+        params: {
+          q: searchName
+        }
+      })
+        .then(response => {
+          // 请求成功
+          this.setState({
+            users: response.data.items.map(user => {
+              return {
+                name: user.login, // 名字
+                avatar: user.avatar_url.replace(/s[0-9]/g, "s"), // 头像
+                url: user.html_url, // 仓库地址
+                id: user.id
+              };
+            }),
+            isLoading: false
+          });
+        })
+        .catch(error => {
+          // 请求失败
+          this.setState({
+            error: "网络出现故障",
+            users: [],
+            isLoading: false
+          });
+        });
+    });
   }
 
   render() {

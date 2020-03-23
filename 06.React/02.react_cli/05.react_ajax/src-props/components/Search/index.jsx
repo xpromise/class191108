@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 // impt
-import PubSub from "pubsub-js";
+import PropTypes from "prop-types";
 
 export default class Search extends Component {
+  static propTypes = {
+    updateSearchName: PropTypes.func.isRequired
+  }
 
   state = {
     searchName: ""
@@ -16,8 +19,8 @@ export default class Search extends Component {
 
   search = () => {
     const { searchName } = this.state;
-    // 发布消息的名称必须和订阅消息一样
-    PubSub.publish("SEARCH_NAME", searchName);
+
+    this.props.updateSearchName(searchName);
   };
 
   render() {
