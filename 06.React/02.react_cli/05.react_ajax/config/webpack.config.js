@@ -101,6 +101,10 @@ module.exports = function(webpackEnv) {
                 // 指示babel做啥事
                 "@babel/preset-env", // 只能处理普通的js语法，不能处理jsx
                 "@babel/preset-react" // 专门用来处理react jsx语法
+              ],
+              plugins: [
+                // 解决识别class语法（static）
+                "@babel/plugin-proposal-class-properties"
               ]
             }
           }
@@ -175,7 +179,6 @@ module.exports = function(webpackEnv) {
         )
       )
     ].filter(Boolean), // 过滤false的值
-    
     resolve: {
       extensions: [".js", ".jsx", ".json"] // 引入文件扩展名可以省略不写
     }

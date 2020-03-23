@@ -50,6 +50,16 @@ class App extends Component {
     });
   };
 
+  // delete关键字不能作为变量/属性命名
+  del = id => {
+    const { comments } = this.state;
+
+    this.setState({
+      // splice会修改原数组，不好
+      comments: comments.filter(comment => comment.id !== id)
+    });
+  };
+
   render() {
     const { comments } = this.state;
 
@@ -67,7 +77,7 @@ class App extends Component {
         <div className="container">
           <Add add={this.add} />
           {/* 以props方式传递comments数据 */}
-          <List comments={comments} />
+          <List comments={comments} del={this.del}/>
         </div>
       </div>
     );
