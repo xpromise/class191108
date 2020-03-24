@@ -1,0 +1,12 @@
+.box {
+  height: 200px;
+  background-color: pink;
+}
+.ant-carousel {
+  width: 200px;
+  height: 200px;
+}
+.ant-carousel .slick-list .slick-slide {
+  width: 200px;
+  height: 200px;
+}
