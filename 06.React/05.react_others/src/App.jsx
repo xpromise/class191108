@@ -1,29 +1,31 @@
 import React, { Component, Fragment } from "react";
 
-import Home from "./components/Home";
-import myContext from "./context/my-context";
-import yourContext from "./context/your-context";
+import A from "./components/A";
+import B from "./components/B";
+import C from "./components/C";
 
 export default class App extends Component {
+  state = {
+    a: false,
+    b: false,
+    c: false
+  };
+
+  update = (key, value) => {
+    this.setState({
+      [key]: value
+    });
+  };
+
   render() {
-    const person = {
-      name: "培华",
-      age: 40
-    };
+    const { a, b, c } = this.state;
 
     return (
       <Fragment>
         <h1>App...</h1>
-        {/* 
-          context上有两个组件：Provider Consumer
-            Provider组件负责给后代组件提供数据（包裹后代组件）
-            Consumer组件负责接受数据
-        */}
-        <yourContext.Provider value={123}>
-          <myContext.Provider value={person}>
-            <Home />
-          </myContext.Provider>
-        </yourContext.Provider>
+        <A update={this.update} a={a} />
+        <B update={this.update} b={b} />
+        <C update={this.update} c={c} />
       </Fragment>
     );
   }

@@ -43,6 +43,7 @@
 - 减少 render 调用次数，从而减少 diff 比较和重新渲染次数
 - shouldComponentUpdate
 - PureComponent：组件内部实现了一种类似 shouldComponentUpdate 的比较
+- React.memo
 
 ## 7、Ref
 
