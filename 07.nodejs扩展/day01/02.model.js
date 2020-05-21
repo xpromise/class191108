@@ -24,6 +24,10 @@ const studentsSchema = new mongoose.Schema({
     default: [],
   },
   info: mongoose.SchemaTypes.Mixed, // 混合类型，任意类型
+  isDeleted: { // 软删除：代表当前用户有无删除
+    type: Boolean,
+    default: false,
+  },
 });
 
 // 创建集合Model
@@ -36,8 +40,10 @@ const Students = mongoose.model("students", studentsSchema);
     Model.create(文档对象) 
     Model.find(查询条件, 投影) (找没找到)返回值是数组
     Model.findOne(查询条件, 投影)
-    更新和删除？
-
+    Model.updateOne(查询条件, 更新的内容)
+    Model.updateMany(查询条件, 更新的内容)
+    Model.deleteOne(查询条件)
+    Model.deleteMany(查询条件)
 */
 
 (async function () {
@@ -56,7 +62,7 @@ const Students = mongoose.model("students", studentsSchema);
     // const result = await Students.find({ age: { $gte: 50 } });
 
     // const result = await Students.findOne(); // 找到了返回值是对象
-    const result = await Students.findOne({ age: { $gte: 50 } }); // 没有找到返回值null
+    // const result = await Students.findOne({ age: { $gte: 50 } }); // 没有找到返回值null
 
     // find方法怎么判断有没有找到数据？
     // if (result.length) {
@@ -64,10 +70,14 @@ const Students = mongoose.model("students", studentsSchema);
     // }
 
     // findOne方法怎么判断有没有找到数据？
-    if (result) {
-      console.log("找到数据了：", result);
-    }
+    // if (result) {
+    //   console.log("找到数据了：", result);
+    // }
 
+    const result = await Students.find();
+    // const result = await Students.updateOne({name: 'peihua'}, {$inc: {age: 1}});
+
+    console.log(result);
   } catch (e) {
     console.log("error", e);
   }
