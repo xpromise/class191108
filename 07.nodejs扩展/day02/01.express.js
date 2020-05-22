@@ -3,7 +3,7 @@ const express = require("express");
 // 创建APP应用对象：APP包含express框架核心功能
 const app = express();
 
-// 处理请求的功能
+// 处理请求的功能 - 路由
 app.get("/", (request, response) => {
   /*
     request 请求对象
