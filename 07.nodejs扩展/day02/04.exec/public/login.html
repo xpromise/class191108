@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>登录</title>
+  </head>
+  <body>
+    <h1>用户登录</h1>
+    <form id="login-form">
+      用户名: <input type="text" class="login-username" /> <br />
+      密码: <input type="password" class="login-password" /> <br />
+      <button type="submit">登录</button>
+    </form>
+    <!-- 引入axios -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <script>
+      const form = document.getElementById("login-form");
+      const usernameInput = document.querySelector(".login-username");
+      const passwordInput = document.querySelector(".login-password");
+
+      // 创建正则规则
+      const usernameReg = /^[0-9a-zA-Z]{4,15}$/;
+      const passwordReg = /^[0-9a-zA-Z_]{4,20}$/;
+
+      form.addEventListener("submit", (e) => {
+        // 禁止表单默认提交行为
+        e.preventDefault();
+        // 收集用户提交的表单数据
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+        // 正则校验（所有表单都需要）
+        if (!usernameReg.test(username)) {
+          alert(
+            "用户名不合法，请输入包含英文、数字、字母，长度为4-15位的用户名"
+          );
+          return;
+        }
+        if (!passwordReg.test(password)) {
+          alert(
+            "密码不合法，请输入包含英文、数字、字母、下划线，长度为4-20位的密码"
+          );
+          return;
+        }
+        // 校验通过，发送请求，请求登录
+        axios
+          .post("http://localhost:9527/login", { username, password })
+          .then((res) => {
+            // 代表请求成功
+            // 判断code的值
+            const result = res.data; // 响应成功的数据
+            if (result.code === 10000) {
+              alert("登录成功");
+              return;
+            }
+
+            alert(result.msg);
+          })
+          .catch((err) => {
+            console.log("登录失败", err);
+          });
+      });
+    </script>
+  </body>
+</html>
