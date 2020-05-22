@@ -15,7 +15,7 @@ app.use(express.static(path.resolve(__dirname, "public")));
 app.use(express.json());
 
 // 设置路由
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   // 处理客户端发送的登录请求
   // 收集用户提交的表单数据
   // console.log(req.body); // { username: 'admin', password: '123123' }
@@ -31,8 +31,29 @@ app.post("/login", (req, res) => {
     res.json({ code: 10001, msg: "密码不合法" });
     return;
   }
+
+  // 验证用户名是否存在
+  const result = await Users.findOne(
+    { username },
+    { username: 1, password: 1 }
+  );
+  if (!result) {
+    res.json({ code: 10002, msg: "用户名不存在" });
+    return;
+  }
+  // 验证密码是否正确
+  // md5/sha1加密算法特点：1. 不可逆的（不能解密） 2. 同样明文加密得到同样的密文
+  if (result.password !== md5(password)) {
+    res.json({ code: 10002, msg: "密码不正确" });
+    return;
+  }
+
+  // 登录成功，生成token，有效期 7 天
+  // json web token（JWT）
+
+  
   // 返回响应
-  res.json({ code: 10000, data: {} });
+  res.json({ code: 10000, data: { id: result._id } });
 });
 
 app.post("/register", async (req, res) => {
@@ -55,6 +76,7 @@ app.post("/register", async (req, res) => {
     res.json({ code: 10001, msg: "手机号不合法" });
     return;
   }
+
   try {
     // 检查用户/手机号是否已存在
     const result = await Users.findOne(
