@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 
 const app = express();
 
@@ -33,7 +34,36 @@ const app = express();
           如果是路由，必须满足两个条件：请求方式和请求路径一致
           如果是中间件，就立即执行
        有没有可能执行多个？ 在内部调用next方法，就会执行下一个中间件函数
+    
+    5. 应用
+      应用层中间件
+      路由器级中间件
+      错误处理中间件
+      内置中间件
+        express.static(资源目录) 向外暴露静态资源
+        express.json() 解析请求体参数 application/json
+        express.urlencoded() 解析请求体参数 application/x-www-form-urlencoded
+      第三方中间件   
 */
+// 将public里面的所有资源向外暴露出去，外面就可以直接访问
+app.use(express.static(path.resolve(__dirname, 'public')));
+
+// 解析请求体参数 application/x-www-form-urlencoded
+// const middleware = express.urlencoded({ extended: true });
+// app.use(middleware);
+app.use(express.urlencoded({ extended: true }));
+// 解析请求体参数 application/json
+app.use(express.json());
+
+// app.use((req, res, next) => {
+//   next();
+// });
+
+app.post("/", (req, res) => {
+  // 默认是不解析请求体参数
+  console.log("body参数: ", req.body); // { name: 'jack', age: '18' }
+  res.send("服务器返回响应~");
+});
 
 //#region
 // 中间件
@@ -57,7 +87,7 @@ app.use((req, res, next) => {
 //#endregion
 
 // 中间件一旦匹配上就执行
-app.use((req, res, next) => {
+/* app.use((req, res, next) => {
   console.log(111);
   next();
 });
@@ -70,7 +100,7 @@ app.get("/", (req, res, next) => {
 
 app.use((req, res, next) => {
   console.log(333);
-});
+}); */
 
 app.listen(9527, "localhost", (err) => {
   if (err) {
