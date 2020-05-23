@@ -1,7 +1,6 @@
-
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require("path");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 /*  
   1. 下载包
@@ -33,10 +32,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 */
 
 module.exports = {
-  entry: './src/index.js',
+  entry: "./src/index.js",
   output: {
     path: undefined,
-    filename: './js/built.js'
+    filename: "./js/built.js",
   },
   module: {
     rules: [
@@ -44,28 +43,25 @@ module.exports = {
         // 处理样式文件
         test: /\.css$/,
         // 只检测src目录下的文件
-        include: path.resolve(__dirname, 'src'),
-        use: [
-          'style-loader',
-          'css-loader'
-        ]
-      }0
-    ]
+        include: path.resolve(__dirname, "src"),
+        use: ["style-loader", "css-loader"],
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './public/index.html'
+      template: "./public/index.html",
     }),
     // 添加支持HMR功能的插件
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
   ],
-  mode: 'development',
+  mode: "development",
   devServer: {
-    contentBase: path.resolve(__dirname, 'public'),
+    contentBase: path.resolve(__dirname, "public"),
     open: true, // 自动打开浏览器
-    host: 'localhost',
+    host: "localhost",
     port: 9527,
     compress: true, // 启动gzip压缩资源
     hot: true, // 启动HMR功能
-  }
-}
+  },
+};
