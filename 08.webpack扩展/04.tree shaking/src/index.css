@@ -1,0 +1,13 @@
+#title {
+  display: flex;
+  color: pink;
+  animation: move 1s infinite;
+}
+
+@keyframes move {
+  0% {
+  }
+  100% {
+    transform: translateX(100px);
+  }
+}
