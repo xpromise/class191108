@@ -1505,7 +1505,7 @@ vue create vue-ts
 ```
 
 安装说明：
-<img src="https://github.com/xpromise/class191108/blob/master/09.typescript/vue-cli.png"/>
+<img src="https://raw.githubusercontent.com/xpromise/class191108/master/09.typescript/vue-cli.png"/>
 
 ### 运行项目
 
