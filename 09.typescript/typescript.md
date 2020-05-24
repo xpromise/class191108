@@ -1505,7 +1505,7 @@ vue create vue-ts
 ```
 
 安装说明：
-<img src="vue-cli.png"/>
+<img src="./vue-cli.png"/>
 
 ### 运行项目
 
