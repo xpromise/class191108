@@ -407,24 +407,6 @@ let tom: Person = {
 tom.id = 9527; // error
 ```
 
-**注意，只读的约束存在于第一次给对象赋值的时候，而不是第一次给只读属性赋值的时候：**
-
-```ts
-interface Person {
-  readonly id: number;
-  name: string;
-  age?: number;
-  [propName: string]: any;
-}
-
-let tom: Person = {
-  name: "Tom",
-  gender: "male",
-};
-
-tom.id = 89757; // error
-```
-
 ### 数组类型
 
 1. 「类型 + 方括号」表示法
@@ -448,6 +430,7 @@ interface NumberArray {
 }
 let fibonacci: NumberArray = [1, 1, 2, 3, 5];
 ```
+
 4. any 在数组中的应用
 
 ```ts
