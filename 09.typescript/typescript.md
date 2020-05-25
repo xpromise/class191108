@@ -257,7 +257,7 @@ num = "7";
 
 ```ts
 // 联合类型使用 | 分隔每个类型。
-let num = string | number;
+let num: string | number;
 num = 7;
 num = "string";
 num = true; // error
