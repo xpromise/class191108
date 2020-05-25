@@ -8,6 +8,9 @@
       super() 调用父类的contructor方法
       super.xxx() 调用父类的其他方法 (也可以通过this访问)
       但是不能父类的属性。父类的属性通过 this.xxx 读取
+    abstract 定义抽象类
+
+    readonly 只读
 
     public 所有类都可以访问属性/方法
     protected 
@@ -39,7 +42,7 @@
     constructor(name: string) {
       super(name); // 调用父类的contructor方法
       // super只能使用方法
-      // console.log(super.name); // error 
+      // console.log(super.name); // error
       // 访问属性，通过this访问
       console.log(this.name);
       console.log(this.sayHello);
@@ -50,6 +53,41 @@
   }
 
   const p = new Person("jack");
-  console.log(p.name, p.age);
-  console.log(p.sayHello());
+  // console.log(p.name, p.age);
+  // console.log(p.sayHello());
+
+  /*
+  什么是抽象类？
+    1. 抽象类是不允许被实例化的
+    2. 抽象类中的抽象方法必须被子类实现
+  */
+
+  // 定义抽象类
+  abstract class Door {
+    name: string;
+    constructor(name: string) {
+      this.name = name;
+    }
+    // 定义抽象方法(没有实现)
+    public abstract say(): void;
+    // 定义方法
+    open() {
+      console.log("open");
+    }
+  }
+
+  // 1. 抽象类是不允许被实例化的
+  // const d = new Door();
+  // 2. 抽象类中的抽象方法必须被子类实现
+  class ADoor extends Door {
+    constructor(name: string) {
+      super(name);
+      this.name; // 通过this访问属性
+      super.open(); // 通过super访问方法
+      this.open(); // 也库通过this访问方法
+    }
+    say() {
+      console.log("say()");
+    }
+  }
 })();
