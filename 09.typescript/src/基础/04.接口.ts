@@ -47,5 +47,7 @@
 
   c.name = 'bob'; // 默认属性都可以修改
   // c.id = 2; // error 只读属性不能修改
+  console.log(c);
+  
 
 })();

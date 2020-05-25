@@ -448,17 +448,7 @@ interface NumberArray {
 }
 let fibonacci: NumberArray = [1, 1, 2, 3, 5];
 ```
-
-4. 类数组
-
-```ts
-// 类数组（Array-like Object）不是数组类型，比如 arguments
-function sum() {
-  let args: number[] = arguments;
-}
-```
-
-5. any 在数组中的应用
+4. any 在数组中的应用
 
 ```ts
 let list: any[] = ["atguigu", 25, { website: "http://www.atguigu.com" }];
