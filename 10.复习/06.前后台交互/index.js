@@ -114,4 +114,42 @@
             3. 负载均衡 
             ...
   3. axios
+    1. axios的拦截器配置
+      初始化配置
+          axios.create({
+            // 配置开发环境和生产环境请求地址
+            baseUrl: process.env.NODE_ENV === 'developemnt' ? '/api' : 'http://www.atguigu.com'
+          })
+
+      请求拦截器
+          具体情况看接口文档：
+          config.headers.token = token
+          config.headers.token = Bearer token
+          config.headers['X-YY-ZZZ'] = token
+          
+          进阶：
+            config.cancelToken = function (cancel) {
+              cancelTokenMap
+            }
+            核心思想：
+              当浏览器历史记录发生变化，要把上一个记录的请求取消掉
+              history.listen
+              遍历存储token容器判断遍历pathname和当前pathname是否一致，不一致就调用cancel
+
+      响应拦截器
+        响应成功回调函数
+            判断请求是否成功 response.data.code 1 / 20001 / 10001 / -100
+              成功返回 response.data.data
+              失败进行错误提示
+        响应失败回调函数
+            判断具体失败的原因
+              err.response
+                有值：有响应结果
+                  根据err.response.status响应状态码来判断具体的错误原因
+                  401 --> 清除token，让用户重新登录
+                没有值：没有响应结果（服务器报错/网络超时）
+                
+        进度条提示功能
+
+    2. axios原理
 */
