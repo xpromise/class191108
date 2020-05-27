@@ -152,4 +152,44 @@
         进度条提示功能
 
     2. axios原理
+      
+      axios 和 axios.create() 区别：
+          axios有取消请求的方法
+          axios.create()本身是没有的
+      
+      axios发送请求经历了什么？
+        - axios(url[, config])
+        - axios(config)
+        - axios.get/post(url, data, config)
+        不管通过axios如何发送请求，实际上调用都是Axios.prototype.request
+
+          1. Axios.prototype.request
+            - 将传入的配置和默认配置合并
+            - 初始化请求方式
+            - 定义chain数组：请求拦截器 发送请求 响应拦截器
+            - 遍历数组执行里面函数
+              - 先触发请求拦截器
+                - 修改请求配置（如：添加token）
+              - 再发送请求
+                - 调用 dispatchRequest 来发送请求
+              - 最后触发响应拦截器
+            - 最后将响应拦截器的返回值返回出去   
+              - 外面axios调用返回值就能拿到响应拦截器的返回值
+
+          2. 调用 dispatchRequest
+
+          - 发送请求时转换请求体
+          - 合并请求头
+          - 调用adaptor发送请求
+          - 转换响应体数据
+            - 成功返回成功的数据
+            - 失败返回失败的原因
+
+          3. 调用 adaptor
+
+          - 判断平台：如果 Nodejs 就用 Http，如果 Browser 就使用 xhr
+          - 整合请求地址、请求方式、请求头、请求参数，发送请求
+          - 通过  status >= 200 && status < 300 来判断响应成功/失败
+
+
 */
